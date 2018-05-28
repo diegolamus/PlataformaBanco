@@ -1,0 +1,122 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Gestionar cuentas cliente</title>
+</h:head>
+<h:body>
+	<ui:include src="menu.xhtml" />
+	<h:form id="formCuentas">
+		<p:growl id="growl2">
+		</p:growl>
+		<h3>Gestionar cuentas cliente</h3>
+		<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
+
+			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+				<h:outputText value="Cliente ID" />
+				<p:inputText id="clienteId"
+					value="#{gestionarCuentasClienteView.txtClienteID}"
+					converterMessage="Por favor ingresa solo dígitos en el id"
+					binding="#{gestionarCuentasClienteView.txtClienteIDBind}">
+					<p:ajax
+						listener="#{gestionarCuentasClienteView.txtClienteIdListener}"
+						update="formCuentas, growl2"></p:ajax>
+				</p:inputText>
+
+				<h:outputText value="Numero Cuenta" />
+				<p:inputText id="numeroCuenta"
+					binding="#{gestionarCuentasClienteView.txtNumeroCuenta}"
+					disabled="true">
+				</p:inputText>
+
+
+				<h:outputText value="Clave" />
+				<p:inputText id="clavesita"
+					binding="#{gestionarCuentasClienteView.txtClave}" disabled="true">
+				</p:inputText>
+
+				<h:outputText value="Saldo" />
+				<p:inputText id="saldo"
+					value="#{gestionarCuentasClienteView.cueSaldo}"
+					binding="#{gestionarCuentasClienteView.txtCueSaldo}"
+					disabled="true">
+				</p:inputText>
+			</h:panelGrid>
+
+			<h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">
+				<p:commandButton value="Guardar" id="btnGuardar"
+					action="#{gestionarCuentasClienteView.action_guardar}"
+					styleClass="ui-priority-primary" update="formCuentas, growl2"
+					binding="#{gestionarCuentasClienteView.btnGuardar}" disabled="true" />
+				<p:commandButton value="Modificar" id="btnModificar" disabled="true"
+					action="#{gestionarCuentasClienteView.action_modificar}"
+					styleClass="ui-priority-primary" update="formCuentas, growl2"
+					binding="#{gestionarCuentasClienteView.btnModificar}" />
+				<p:commandButton value="Cancelar" id="btnCancelar" disabled="true"
+					action="#{gestionarCuentasClienteView.action_cancelar}"
+					styleClass="ui-priority-primary" update="formCuentas, growl2"
+					binding="#{gestionarCuentasClienteView.btnCancelar}" />
+				<p:commandButton value="Limpiar" id="btnLimpiar"
+					action="#{gestionarCuentasClienteView.action_limpiar}"
+					styleClass="ui-priority-primary" update="formCuentas, growl2"
+					binding="#{gestionarCuentasClienteView.btnLimpiar}" />
+			</h:panelGrid>
+
+			<p:dataTable widgetVar="tblCuentas" var="cuentas" rows="12"
+				paginator="true" selectionMode="single"
+				selection="#{gestionarCuentasClienteView.selectedCuenta}"
+				rowKey="#{cuentas.cueNumero}"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+				scrollable="TRUE" scrollHeight="250"
+				value="#{gestionarCuentasClienteView.lstCuentas}">
+
+				<p:column headerText="Id" filterBy="#{cuentas.cueNumero}"
+					filterMatchMode="contains">
+					<h:outputText value="#{cuentas.cueNumero}" />
+				</p:column>
+
+				<p:column headerText="Cliente Id"
+					filterBy="#{cuentas.clientes.cliId}" filterMatchMode="contains">
+					<h:outputText value="#{cuentas.clientes.cliId}" />
+				</p:column>
+
+				<p:column headerText="Saldo" filterBy="#{cuentas.cueSaldo}"
+					filterMatchMode="contains">
+					<h:outputText value="#{cuentas.cueSaldo}" />
+				</p:column>
+
+				<p:column headerText="Activo" filterBy="#{cuentas.cueActiva}"
+					filterMatchMode="contains">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('tblCuentas').filter()" id="Activo"
+							style="width:90px">
+							<f:selectItem itemLabel="Todo" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Activo" itemValue="S" />
+							<f:selectItem itemLabel="Inactivo" itemValue="N" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText value="#{cuentas.cueActiva}" />
+				</p:column>
+
+				<f:facet name="footer">
+					<div align="right">
+						<p:commandButton value="Inactivar - Activar" id="inactivar"
+							action="#{gestionarCuentasClienteView.action_inactivar()}"
+							styleClass="ui-priority-primary" update="formCuentas" />
+
+						<p:commandButton value="Editar" id="editar2"
+							action="#{gestionarCuentasClienteView.action_editar()}"
+							styleClass="ui-priority-primary" update="formCuentas" />
+					</div>
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:panelGrid>
+
+	</h:form>
+</h:body>
+</html>

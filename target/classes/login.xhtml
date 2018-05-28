@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Log in</title>
+</h:head>
+<h:body>
+	<h:form id="formLogIn">
+		<p:growl id="growl4"></p:growl>
+
+		<div align="center">
+			<p:panel id="basic" header="Inicio de sesión"
+				style="margin-bottom:20px" >
+
+				<h:panelGrid columns="2" cellpadding="10">
+
+					<h:outputText value="Cedula Usuario" />
+					<p:inputText id="usuario" value="#{loginView.txtUsuario}">
+					</p:inputText>
+
+					<h:outputText value="Contraseña" />
+					<p:inputText id="Contrasenia" binding="#{loginView.txtContrasenia}">
+					</p:inputText>
+
+				</h:panelGrid>
+
+				<p:commandButton value="Ingresar" id="btnIngresar"
+					action="#{loginView.action_ingresar()}"
+					styleClass="ui-priority-primary" update="formLogIn, growl4" />
+
+			</p:panel>
+		</div>
+	</h:form>
+</h:body>
+</html>

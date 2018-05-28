@@ -1,0 +1,148 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Gestionar Cliente</title>
+</h:head>
+
+<h:body>
+	<ui:include src="menu.xhtml" />
+	<h:form id="formCliente">
+		<p:growl id="growl1">
+		</p:growl>
+		<h3>Gestionar Cliente</h3>
+		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+			<h:outputText value="Cedula cliente" />
+			<p:inputText id="clienteIdentificacion"
+				value="#{gestionarClienteView.txtIdentificacion}"
+				converterMessage="Por favor ingresa solo dígitos en el id"
+				binding="#{gestionarClienteView.txtIdentificacion2}">
+			</p:inputText>
+
+			<h:outputText value="Tipo Documento" />
+			<p:selectOneMenu id="tipoDocumento" style="width:200px"
+				value="#{gestionarClienteView.valueTipoIdentificacion}">
+				<f:selectItem itemLabel="Seleccione" itemValue="#{-1}"
+					noSelectionOption="true" />
+				<f:selectItems value="#{gestionarClienteView.lstTiposDoc}" />
+			</p:selectOneMenu>
+
+			<h:outputText value="Nombre" />
+			<p:inputText id="clienteNombre"
+				binding="#{gestionarClienteView.txtNombre}">
+			</p:inputText>
+
+			<h:outputText value="Dirección" />
+			<p:inputText id="clienteDireccion"
+				binding="#{gestionarClienteView.txtDireccion}">
+			</p:inputText>
+
+			<h:outputText value="Teléfono" />
+			<p:inputMask id="phone" mask="(999) 999-9999"
+				binding="#{gestionarClienteView.txtTelefono}"
+				value="#{gestionarClienteView.telefono}">
+			</p:inputMask>
+
+			<h:outputText value="Mail:" />
+			<p:inputText id="clienteMail"
+				binding="#{gestionarClienteView.txtMail}">
+			</p:inputText>
+		</h:panelGrid>
+
+		<h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">
+			<p:commandButton value="Guardar" id="btnGuardar"
+				action="#{gestionarClienteView.action_guardar}"
+				styleClass="ui-priority-primary" update="formCliente, growl1"
+				binding="#{gestionarClienteView.btnGuardar}" />
+			<p:commandButton value="Modificar" id="btnModificar" disabled="true"
+				action="#{gestionarClienteView.action_modificar}"
+				styleClass="ui-priority-primary" update="formCliente, growl1"
+				binding="#{gestionarClienteView.btnModificar}" />
+			<p:commandButton value="Cancelar" id="btnCancelar" disabled="true"
+				action="#{gestionarClienteView.action_cancelar}"
+				styleClass="ui-priority-primary" update="formCliente, growl1"
+				binding="#{gestionarClienteView.btnCancelar}" />
+			<p:commandButton value="Limpiar" id="btnLimpiar"
+				action="#{gestionarClienteView.action_limpiar}"
+				styleClass="ui-priority-primary" update="formCliente, growl1"
+				binding="#{gestionarClienteView.btnLimpiar}" />
+		</h:panelGrid>
+
+
+
+		<p:dataTable widgetVar="tblCliente" var="cliente" rows="12"
+			paginator="true" selectionMode="single"
+			selection="#{gestionarClienteView.selectedCliente}"
+			rowKey="#{cliente.cliId}"
+			paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+			scrollable="TRUE" scrollHeight="250"
+			value="#{gestionarClienteView.lstClientes}">
+
+			<p:column headerText="Id" filterBy="#{cliente.cliId}"
+				filterMatchMode="contains">
+				<h:outputText value="#{cliente.cliId}" />
+			</p:column>
+
+			<p:column headerText="Tipo documento"
+				filterBy="#{cliente.tiposDocumentos.tdocCodigo}"
+				filterMatchMode="contains">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('tblCliente').filter()"
+						style="width:90px">
+						<f:selectItem itemLabel="Todo" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItems value="#{gestionarClienteView.lstTiposDoc}" />
+					</p:selectOneMenu>
+				</f:facet>
+				<h:outputText value="#{cliente.tiposDocumentos.tdocNombre}" />
+			</p:column>
+
+			<p:column headerText="nombre" filterBy="#{cliente.cliNombre}"
+				filterMatchMode="contains">
+				<h:outputText value="#{cliente.cliNombre}" />
+			</p:column>
+
+			<p:column headerText="direccion" filterBy="#{cliente.cliDireccion}"
+				filterMatchMode="contains">
+				<h:outputText value="#{cliente.cliDireccion}" />
+			</p:column>
+
+			<p:column headerText="Teléfono" filterBy="#{cliente.cliTelefono}"
+				filterMatchMode="contains">
+				<h:outputText value="#{cliente.cliTelefono}" />
+			</p:column>
+
+			<p:column headerText="mail" filterBy="#{cliente.cliMail}"
+				filterMatchMode="contains">
+				<h:outputText value="#{cliente.cliMail}" />
+			</p:column>
+
+			<p:column headerText="activo" filterBy="#{cliente.cliActiva}"
+				filterMatchMode="contains">
+				<f:facet name="filter">
+					<p:selectOneMenu onchange="PF('tblCliente').filter()" id="Activo"
+						style="width:90px">
+						<f:selectItem itemLabel="Todo" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="Activo" itemValue="S" />
+						<f:selectItem itemLabel="Inactivo" itemValue="N" />
+					</p:selectOneMenu>
+				</f:facet>
+				<h:outputText value="#{cliente.cliActiva}" />
+			</p:column>
+			<f:facet name="footer">
+				<div align="right">
+					<p:commandButton value="Inactivar - Activar" id="inactivar"
+						action="#{gestionarClienteView.action_inactivar()}"
+						styleClass="ui-priority-primary" update="formCliente" />
+					<p:commandButton value="Editar" id="editar2"
+						action="#{gestionarClienteView.action_editar()}"
+						styleClass="ui-priority-primary" update="formCliente" />
+				</div>
+			</f:facet>
+		</p:dataTable>
+	</h:form>
+</h:body>
+</html>
