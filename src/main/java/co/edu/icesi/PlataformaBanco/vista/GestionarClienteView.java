@@ -44,6 +44,24 @@ public class GestionarClienteView {
 	private List<Clientes> lstClientes;
 	private List<SelectItem> lstTiposDoc;
 
+	public void listener_buscarCliente() {
+		try {
+			Clientes cliente = businessDelegate.findClienteByID(txtIdentificacion);
+			if (cliente != null)
+				FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"El cliente ya existe", ""));
+			else {
+				txtNombre.setDisabled(false);
+				txtDireccion.setDisabled(false);
+				txtTelefono.setDisabled(false);
+				txtMail.setDisabled(false);
+				btnGuardar.setDisabled(false);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	public String action_editar() {
 		Clientes cliente = selectedCliente;
 		if (cliente == null)
@@ -180,6 +198,11 @@ public class GestionarClienteView {
 		txtDireccion.resetValue();
 		txtTelefono.resetValue();
 		txtMail.resetValue();
+		txtNombre.setDisabled(true);
+		txtDireccion.setDisabled(true);
+		txtTelefono.setDisabled(true);
+		txtMail.setDisabled(true);
+		btnGuardar.setDisabled(true);
 		return "";
 	}
 

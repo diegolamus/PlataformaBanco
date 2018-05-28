@@ -19,6 +19,9 @@
 				value="#{gestionarClienteView.txtIdentificacion}"
 				converterMessage="Por favor ingresa solo dígitos en el id"
 				binding="#{gestionarClienteView.txtIdentificacion2}">
+				<p:ajax
+					listener="#{gestionarClienteView.listener_buscarCliente}"
+					update="formCliente growl1"></p:ajax>
 			</p:inputText>
 
 			<h:outputText value="Tipo Documento" />
@@ -31,23 +34,27 @@
 
 			<h:outputText value="Nombre" />
 			<p:inputText id="clienteNombre"
-				binding="#{gestionarClienteView.txtNombre}">
+				binding="#{gestionarClienteView.txtNombre}"
+				disabled="true">
 			</p:inputText>
 
 			<h:outputText value="Dirección" />
 			<p:inputText id="clienteDireccion"
-				binding="#{gestionarClienteView.txtDireccion}">
+				binding="#{gestionarClienteView.txtDireccion}"
+				disabled="true">
 			</p:inputText>
 
 			<h:outputText value="Teléfono" />
 			<p:inputMask id="phone" mask="(999) 999-9999"
 				binding="#{gestionarClienteView.txtTelefono}"
-				value="#{gestionarClienteView.telefono}">
+				value="#{gestionarClienteView.telefono}"
+				disabled="true">
 			</p:inputMask>
 
 			<h:outputText value="Mail:" />
 			<p:inputText id="clienteMail"
-				binding="#{gestionarClienteView.txtMail}">
+				binding="#{gestionarClienteView.txtMail}"
+				disabled="true">
 			</p:inputText>
 		</h:panelGrid>
 
