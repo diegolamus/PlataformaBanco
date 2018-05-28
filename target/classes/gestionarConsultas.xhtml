@@ -4,17 +4,184 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
-	<title>Gestionar cuentas cliente</title>
+	<title>Consultas</title>
 </h:head>
 <h:body>
 	<ui:include src="menu.xhtml" />
 	<h:form id="formConsultas">
 		<p:growl id="growl5">
 		</p:growl>
+		<h3>Consultas</h3>
+		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+			<h:outputText value="Cedula cliente" />
+			<p:inputText id="clienteIdentificacion"
+				value="#{consultasView.cedulaUsuario}"
+				converterMessage="Por favor ingresa solo dígitos en el id">
+			</p:inputText>
+			<p:outputLabel for="fechaInicio" value="FechaInicio" />
+			<p:calendar id="fechaInicio"
+				value="#{consultasView.date_fechaInicio}"
+				binding="#{consultasView.calendar_fechaInicio}" />
+			<p:outputLabel for="fechaInicio" value="FechaInicio" />
+			<p:calendar id="fechaInicio" value="#{consultasView.date_fechaFinal}"
+				binding="#{consultasView.calendar_fechaFinal}" />
+			<h:outputText value="Cuenta cliente" />
+			<p:inputText id="numeroCuenta"
+				binding="#{consultasView.txtNumeroCuenta}">
+			</p:inputText>
+			<p:commandButton value="Buscar" id="btnBuscar"
+				action="#{consultasView.action_buscar}"
+				styleClass="ui-priority-primary" update="formConsultas" />
+			<p:commandButton value="Limpiar" id="btnLimpiar"
+				action="#{consultasView.action_limpiar}"
+				styleClass="ui-priority-primary" update="formConsultas" />
+		</h:panelGrid>
+		<p:tabView>
+			<p:tab title="Cuentas">
+				<p:dataTable widgetVar="tblCuentas" var="cuentas" rows="12"
+					paginator="true" selectionMode="single"
+					selection="#{gestionarCuentasClienteView.selectedCuenta}"
+					rowKey="#{cuentas.cueNumero}"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+					scrollable="TRUE" scrollHeight="250"
+					value="#{consultasView.cuentas}">
+					<p:column headerText="Id" filterBy="#{cuentas.cueNumero}"
+						filterMatchMode="contains">
+						<h:outputText value="#{cuentas.cueNumero}" />
+					</p:column>
+					<p:column headerText="Cliente Id"
+						filterBy="#{cuentas.clientes.cliId}" filterMatchMode="contains">
+						<h:outputText value="#{cuentas.clientes.cliId}" />
+					</p:column>
+					<p:column headerText="Saldo" filterBy="#{cuentas.cueSaldo}"
+						filterMatchMode="contains">
+						<h:outputText value="#{cuentas.cueSaldo}" />
+					</p:column>
+					<p:column headerText="Activo" filterBy="#{cuentas.cueActiva}"
+						filterMatchMode="contains">
+						<f:facet name="filter">
+							<p:selectOneMenu onchange="PF('tblCuentas').filter()" id="Activo"
+								style="width:90px">
+								<f:selectItem itemLabel="Todo" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Activo" itemValue="S" />
+								<f:selectItem itemLabel="Inactivo" itemValue="N" />
+							</p:selectOneMenu>
+						</f:facet>
+						<h:outputText value="#{cuentas.cueActiva}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			<p:tab title="Consignaciones">
+				<p:dataTable widgetVar="tblConsignaciones" var="consignaciones"
+					rows="12" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+					scrollable="TRUE" scrollHeight="250"
+					value="#{consultasView.consignaciones}">
+					<p:column headerText="Número consignación"
+						filterBy="#{consignaciones.id.conCodigo}"
+						filterMatchMode="contains">
+						<h:outputText value="#{consignaciones.id.conCodigo}" />
+					</p:column>
+					<p:column headerText="Número cuenta"
+						filterBy="#{consignaciones.id.cueNumero}"
+						filterMatchMode="contains">
+						<h:outputText value="#{consignaciones.id.cueNumero}" />
+					</p:column>
+					<p:column headerText="Cliente"
+						filterBy="#{consignaciones.cuentas.clientes.cliId}"
+						filterMatchMode="contains">
+						<h:outputText value="#{consignaciones.cuentas.clientes.cliId}" />
+					</p:column>
+					<p:column headerText="Valor" filterBy="#{consignaciones.conValor}"
+						filterMatchMode="contains">
+						<h:outputText value="#{consignaciones.conValor}" />
+					</p:column>
+					<p:column headerText="Fecha">
+						<h:outputText value="#{consignaciones.conFecha}" />
+					</p:column>
+					<p:column headerText="Descripción"
+						filterBy="#{consignaciones.conDescripcion}"
+						filterMatchMode="contains">
+						<h:outputText value="#{consignaciones.conDescripcion}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			<p:tab title="Retiros">
+				<p:dataTable widgetVar="tblRetiros" var="retiros" rows="12"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+					scrollable="TRUE" scrollHeight="250"
+					value="#{consultasView.retiros}">
+					<p:column headerText="Número retiro"
+						filterBy="#{retiros.id.retCodigo}" filterMatchMode="contains">
+						<h:outputText value="#{retiros.id.retCodigo}" />
+					</p:column>
+					<p:column headerText="Número cuenta"
+						filterBy="#{retiros.id.cueNumero}" filterMatchMode="contains">
+						<h:outputText value="#{retiros.id.cueNumero}" />
+					</p:column>
+					<p:column headerText="Cliente"
+						filterBy="#{retiros.cuentas.clientes.cliId}"
+						filterMatchMode="contains">
+						<h:outputText value="#{retiros.cuentas.clientes.cliId}" />
+					</p:column>
+					<p:column headerText="Valor" filterBy="#{retiros.retValor}"
+						filterMatchMode="contains">
+						<h:outputText value="#{retiros.retValor}" />
+					</p:column>
+					<p:column headerText="Fecha">
+						<h:outputText value="#{retiros.retFecha}" />
+					</p:column>
+					<p:column headerText="Descripción"
+						filterBy="#{retiros.retDescripcion}" filterMatchMode="contains">
+						<h:outputText value="#{retiros.retDescripcion}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			<p:tab title="Transferencias">
+				<p:dataTable widgetVar="tblTransferencias" var="transferencias"
+					rows="12" paginator="true"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+					scrollable="TRUE" scrollHeight="250"
+					value="#{consultasView.transferencias}">
+					<p:column headerText="Número transferencia"
+						filterBy="#{transferencias.id.tranCodigo}"
+						filterMatchMode="contains">
+						<h:outputText value="#{transferencias.id.tranCodigo}" />
+					</p:column>
+					<p:column headerText="Número cuenta origen"
+						filterBy="#{transferencias.id.origenCueNumero}"
+						filterMatchMode="contains">
+						<h:outputText value="#{transferencias.id.origenCueNumero}" />
+					</p:column>
+					<p:column headerText="Número cuenta detino"
+						filterBy="#{transferencias.id.destinoCueNumero}"
+						filterMatchMode="contains">
+						<h:outputText value="#{transferencias.id.destinoCueNumero}" />
+					</p:column>
+					<p:column headerText="Cliente origen"
+						filterBy="#{transferencias.cuentasByOrigenCueNumero.clientes.cliId}"
+						filterMatchMode="contains">
+						<h:outputText
+							value="#{transferencias.cuentasByOrigenCueNumero.clientes.cliId}" />
+					</p:column>
+					<p:column headerText="Valor" filterBy="#{transferencias.tranValor}"
+						filterMatchMode="contains">
+						<h:outputText value="#{transferencias.tranValor}" />
+					</p:column>
+					<p:column headerText="Fecha">
+						<h:outputText value="#{transferencias.tranFecha}" />
+					</p:column>
+					<p:column headerText="Descripción"
+						filterBy="#{transferencias.tranDescripcion}"
+						filterMatchMode="contains">
+						<h:outputText value="#{transferencias.tranDescripcion}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+		</p:tabView>
 
-
-
-	
 	</h:form>
 </h:body>
 </html>

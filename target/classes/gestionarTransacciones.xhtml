@@ -14,18 +14,15 @@
 		</p:growl>
 		<h3>Gestionar Transacciones</h3>
 		<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
-
 			<p:tabView>
-
 				<p:tab title="Consignaciones">
 					<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 						<h:outputText value="Número Consignacion" />
 						<p:inputText id="numeroConsignacion"
 							value="#{gestionarTransaccionesView.codigoConsignacion}"
-							converterMessage="Por favor ingresa solo dígitos en el id"
+							converterMessage="Por favor ingresa solo dígitos en el número de consignación"
 							binding="#{gestionarTransaccionesView.txtCodigoConsignacion}">
 						</p:inputText>
-
 						<h:outputText value="Número Cuenta" />
 						<p:inputText id="numeroCuenta"
 							binding="#{gestionarTransaccionesView.txtNumeroCuenta_consignacion}">
@@ -33,7 +30,6 @@
 								listener="#{gestionarTransaccionesView.txtNumeroCuentaListener_consignacion}"
 								update="formTransacciones"></p:ajax>
 						</p:inputText>
-
 						<h:outputText value="Cédula Usuario" />
 						<p:inputText id="numeroCedula"
 							value="#{gestionarTransaccionesView.cedulaUsuario_consignacion}"
@@ -41,79 +37,62 @@
 							binding="#{gestionarTransaccionesView.txtCedulaUsuario_consignacion}"
 							disabled="true">
 						</p:inputText>
-
 						<h:outputText value="Valor Consignación" />
 						<p:inputText id="valorConsignacion"
 							value="#{gestionarTransaccionesView.valorConsignacion}"
 							binding="#{gestionarTransaccionesView.txtValorConsigancion}"
 							disabled="true">
 						</p:inputText>
-
 						<p:outputLabel for="popup" value="Fecha" />
 						<p:calendar id="popup"
 							value="#{gestionarTransaccionesView.date_consignacion}"
 							binding="#{gestionarTransaccionesView.calendar_consignacion}"
 							disabled="true" />
-
 						<h:outputText value="Descripción" />
 						<p:inputTextarea rows="5" cols="30" counter="display"
 							maxlength="200" counterTemplate="{0} caracteres restantes"
 							autoResize="false"
 							binding="#{gestionarTransaccionesView.descripcion_consignacion}"
 							disabled="true" />
-
 						<h:outputText value="  " />
 						<h:outputText id="display" />
-
 						<p:commandButton value="Guardar" id="btnGuardar"
 							action="#{gestionarTransaccionesView.action_guardarConsignacion()}"
 							styleClass="ui-priority-primary" update="formTransacciones"
 							binding="#{gestionarTransaccionesView.btnGuardar_consignacion}"
 							disabled="true" />
-
 						<p:commandButton value="Limpiar" id="btnlimpiar"
 							action="#{gestionarTransaccionesView.action_limpiarConsignacion()}"
 							styleClass="ui-priority-primary" update="formTransacciones"
 							binding="#{gestionarTransaccionesView.btnLimpiar_consignacion}" />
 					</h:panelGrid>
-
 					<p:dataTable widgetVar="tblConsignaciones" var="consignaciones"
 						rows="12" paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 						scrollable="TRUE" scrollHeight="250"
 						value="#{gestionarTransaccionesView.consignaciones}">
-
-
 						<p:column headerText="Número consignación"
 							filterBy="#{consignaciones.id.conCodigo}"
 							filterMatchMode="contains">
 							<h:outputText value="#{consignaciones.id.conCodigo}" />
 						</p:column>
-
-
 						<p:column headerText="Número cuenta"
 							filterBy="#{consignaciones.id.cueNumero}"
 							filterMatchMode="contains">
 							<h:outputText value="#{consignaciones.id.cueNumero}" />
 						</p:column>
-
 						<p:column headerText="Cliente"
 							filterBy="#{consignaciones.cuentas.clientes.cliId}"
 							filterMatchMode="contains">
 							<h:outputText value="#{consignaciones.cuentas.clientes.cliId}" />
 						</p:column>
-
 						<p:column headerText="Valor" filterBy="#{consignaciones.conValor}"
 							filterMatchMode="contains">
 							<h:outputText value="#{consignaciones.conValor}" />
 						</p:column>
-
-						<p:column headerText="Fecha" filterBy="#{consignaciones.conFecha}"
-							filterMatchMode="contains">
+						<p:column headerText="Fecha" >
 							<h:outputText value="#{consignaciones.conFecha}" />
 						</p:column>
-
-
 						<p:column headerText="Descripción"
 							filterBy="#{consignaciones.conDescripcion}"
 							filterMatchMode="contains">
@@ -121,8 +100,6 @@
 						</p:column>
 					</p:dataTable>
 				</p:tab>
-
-
 				<p:tab title="Retiros">
 					<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 						<h:outputText value="Número Retiro" />
@@ -131,7 +108,6 @@
 							converterMessage="Por favor ingresa solo dígitos en el código del retiro"
 							binding="#{gestionarTransaccionesView.txtCodigoRetiro}">
 						</p:inputText>
-
 						<h:outputText value="Número Cuenta" />
 						<p:inputText id="numeroCuentaRet"
 							binding="#{gestionarTransaccionesView.txtNumeroCuenta_Retiro}">
@@ -139,7 +115,6 @@
 								listener="#{gestionarTransaccionesView.txtNumeroCuentaListener_retiro()}"
 								update="formTransacciones"></p:ajax>
 						</p:inputText>
-
 						<h:outputText value="Cédula Usuario" />
 						<p:inputText id="numeroCedulaRet"
 							value="#{gestionarTransaccionesView.cedulaUsuario_Retiro}"
@@ -147,82 +122,66 @@
 							binding="#{gestionarTransaccionesView.txtCedulaUsuario_Retiro}"
 							disabled="true">
 						</p:inputText>
-
 						<h:outputText value="Valor Retiro" />
 						<p:inputText id="valorRetiro"
 							value="#{gestionarTransaccionesView.valorRetiro}"
 							binding="#{gestionarTransaccionesView.txtValorRetiro}"
 							disabled="true">
 						</p:inputText>
-
 						<p:outputLabel for="popup" value="Fecha" />
 						<p:calendar id="popupret"
 							value="#{gestionarTransaccionesView.date_Retiro}"
 							binding="#{gestionarTransaccionesView.calendar_Retiro}"
 							disabled="true" />
-
 						<h:outputText value="Descripción" />
 						<p:inputTextarea rows="5" cols="30" counter="display2"
 							maxlength="200" counterTemplate="{0} caracteres restantes"
 							autoResize="false"
 							binding="#{gestionarTransaccionesView.descripcion_Retiro}"
 							disabled="true" />
-
 						<h:outputText value="  " />
 						<h:outputText id="display2" />
-
 						<p:commandButton value="Guardar" id="btnGuardarret"
 							action="#{gestionarTransaccionesView.action_guardarRetiro()}"
 							styleClass="ui-priority-primary" update="formTransacciones"
 							binding="#{gestionarTransaccionesView.btnGuardar_Retiro}"
 							disabled="true" />
-
 						<p:commandButton value="Limpiar" id="btnlimpiarret"
 							action="#{gestionarTransaccionesView.action_limpiarRetiro()}"
 							styleClass="ui-priority-primary" update="formTransacciones"
 							binding="#{gestionarTransaccionesView.btnLimpiar_Retiro}" />
 					</h:panelGrid>
-
 					<p:dataTable widgetVar="tblRetiros" var="retiros" rows="12"
 						paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 						scrollable="TRUE" scrollHeight="250"
 						value="#{gestionarTransaccionesView.retiros}">
-
 						<p:column headerText="Número retiro"
 							filterBy="#{retiros.id.retCodigo}" filterMatchMode="contains">
 							<h:outputText value="#{retiros.id.retCodigo}" />
 						</p:column>
-
 						<p:column headerText="Número cuenta"
 							filterBy="#{retiros.id.cueNumero}" filterMatchMode="contains">
 							<h:outputText value="#{retiros.id.cueNumero}" />
 						</p:column>
-
 						<p:column headerText="Cliente"
 							filterBy="#{retiros.cuentas.clientes.cliId}"
 							filterMatchMode="contains">
 							<h:outputText value="#{retiros.cuentas.clientes.cliId}" />
 						</p:column>
-
 						<p:column headerText="Valor" filterBy="#{retiros.retValor}"
 							filterMatchMode="contains">
 							<h:outputText value="#{retiros.retValor}" />
 						</p:column>
-
-						<p:column headerText="Fecha" filterBy="#{retiros.retFecha}"
-							filterMatchMode="contains">
+						<p:column headerText="Fecha" >
 							<h:outputText value="#{retiros.retFecha}" />
 						</p:column>
-
 						<p:column headerText="Descripción"
 							filterBy="#{retiros.retDescripcion}" filterMatchMode="contains">
 							<h:outputText value="#{retiros.retDescripcion}" />
 						</p:column>
 					</p:dataTable>
 				</p:tab>
-
-
 				<p:tab title="Transferencias">
 					<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 						<h:outputText value="Número Transferencia" />
@@ -231,7 +190,6 @@
 							converterMessage="Por favor ingresa solo dígitos en el código de la transferencia"
 							binding="#{gestionarTransaccionesView.txtCodigoTransferencia}">
 						</p:inputText>
-
 						<h:outputText value="Número Cuenta Origen" />
 						<p:inputText id="numeroCuentaOr"
 							binding="#{gestionarTransaccionesView.txtNumeroCuenta_origen_Transferencia}">
@@ -239,7 +197,6 @@
 								listener="#{gestionarTransaccionesView.txtNumeroCuentaListener_transferencia()}"
 								update="formTransacciones"></p:ajax>
 						</p:inputText>
-
 						<h:outputText value="Número Cuenta Destino" />
 						<p:inputText id="numeroCuentaDest"
 							binding="#{gestionarTransaccionesView.txtNumeroCuenta_destino_Transferencia}">
@@ -247,7 +204,6 @@
 								listener="#{gestionarTransaccionesView.txtNumeroCuentaListener_transferencia()}"
 								update="formTransacciones"></p:ajax>
 						</p:inputText>
-
 						<h:outputText value="Cédula Usuario Origen" />
 						<p:inputText id="numeroCedulaTran"
 							value="#{gestionarTransaccionesView.cedulaUsuario_Transferencia}"
@@ -255,7 +211,6 @@
 							binding="#{gestionarTransaccionesView.txtCedulaUsuario_Transferencia}"
 							disabled="true">
 						</p:inputText>
-
 						<h:outputText value="Cédula Usuario Destino" />
 						<p:inputText id="numeroCedulaDest"
 							value="#{gestionarTransaccionesView.cedulaUsuarioDest_Transferencia}"
@@ -263,42 +218,35 @@
 							binding="#{gestionarTransaccionesView.txtCedulaUsuarioDest_Transferencia}"
 							disabled="true">
 						</p:inputText>
-
 						<h:outputText value="Valor Transferencia" />
 						<p:inputText id="valorTransferencia"
 							value="#{gestionarTransaccionesView.valorTransferencia}"
 							binding="#{gestionarTransaccionesView.txtValorTransferencia}"
 							disabled="true">
 						</p:inputText>
-
 						<p:outputLabel for="popup" value="Fecha" />
 						<p:calendar id="popuptran"
 							value="#{gestionarTransaccionesView.date_Transferencia}"
 							binding="#{gestionarTransaccionesView.calendar_Transferencia}"
 							disabled="true" />
-
 						<h:outputText value="Descripción" />
 						<p:inputTextarea rows="5" cols="30" counter="display3"
 							maxlength="200" counterTemplate="{0} caracteres restantes"
 							autoResize="false"
 							binding="#{gestionarTransaccionesView.descripcion_Transferencia}"
 							disabled="true" />
-
 						<h:outputText value="  " />
 						<h:outputText id="display3" />
-
 						<p:commandButton value="Guardar" id="btnGuardartran"
 							action="#{gestionarTransaccionesView.action_guardarTransferencia()}"
 							styleClass="ui-priority-primary" update="formTransacciones"
 							binding="#{gestionarTransaccionesView.btnGuardar_Transferencia}"
 							disabled="true" />
-
 						<p:commandButton value="Limpiar" id="btnlimpiartran"
 							action="#{gestionarTransaccionesView.action_limpiarTransferencia()}"
 							styleClass="ui-priority-primary" update="formTransacciones"
 							binding="#{gestionarTransaccionesView.btnLimpiar_Transferencia}" />
 					</h:panelGrid>
-
 					<p:dataTable widgetVar="tblTransferencias" var="transferencias"
 						rows="12" paginator="true"
 						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
@@ -335,8 +283,7 @@
 							<h:outputText value="#{transferencias.tranValor}" />
 						</p:column>
 
-						<p:column headerText="Fecha"
-							filterBy="#{transferencias.tranFecha}" filterMatchMode="contains">
+						<p:column headerText="Fecha">
 							<h:outputText value="#{transferencias.tranFecha}" />
 						</p:column>
 
@@ -346,11 +293,8 @@
 							<h:outputText value="#{transferencias.tranDescripcion}" />
 						</p:column>
 					</p:dataTable>
-
 				</p:tab>
 			</p:tabView>
-
-
 		</h:panelGrid>
 	</h:form>
 </h:body>

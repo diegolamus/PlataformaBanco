@@ -13,7 +13,6 @@
 		</p:growl>
 		<h3>Gestionar cuentas cliente</h3>
 		<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
-
 			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 				<h:outputText value="Cliente ID" />
 				<p:inputText id="clienteId"
@@ -24,19 +23,15 @@
 						listener="#{gestionarCuentasClienteView.txtClienteIdListener}"
 						update="formCuentas, growl2"></p:ajax>
 				</p:inputText>
-
 				<h:outputText value="Numero Cuenta" />
 				<p:inputText id="numeroCuenta"
 					binding="#{gestionarCuentasClienteView.txtNumeroCuenta}"
 					disabled="true">
 				</p:inputText>
-
-
 				<h:outputText value="Clave" />
 				<p:inputText id="clavesita"
 					binding="#{gestionarCuentasClienteView.txtClave}" disabled="true">
 				</p:inputText>
-
 				<h:outputText value="Saldo" />
 				<p:inputText id="saldo"
 					value="#{gestionarCuentasClienteView.cueSaldo}"
@@ -44,7 +39,6 @@
 					disabled="true">
 				</p:inputText>
 			</h:panelGrid>
-
 			<h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">
 				<p:commandButton value="Guardar" id="btnGuardar"
 					action="#{gestionarCuentasClienteView.action_guardar}"
@@ -63,7 +57,6 @@
 					styleClass="ui-priority-primary" update="formCuentas, growl2"
 					binding="#{gestionarCuentasClienteView.btnLimpiar}" />
 			</h:panelGrid>
-
 			<p:dataTable widgetVar="tblCuentas" var="cuentas" rows="12"
 				paginator="true" selectionMode="single"
 				selection="#{gestionarCuentasClienteView.selectedCuenta}"
@@ -71,22 +64,18 @@
 				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 				scrollable="TRUE" scrollHeight="250"
 				value="#{gestionarCuentasClienteView.lstCuentas}">
-
 				<p:column headerText="Id" filterBy="#{cuentas.cueNumero}"
 					filterMatchMode="contains">
 					<h:outputText value="#{cuentas.cueNumero}" />
 				</p:column>
-
 				<p:column headerText="Cliente Id"
 					filterBy="#{cuentas.clientes.cliId}" filterMatchMode="contains">
 					<h:outputText value="#{cuentas.clientes.cliId}" />
 				</p:column>
-
 				<p:column headerText="Saldo" filterBy="#{cuentas.cueSaldo}"
 					filterMatchMode="contains">
 					<h:outputText value="#{cuentas.cueSaldo}" />
 				</p:column>
-
 				<p:column headerText="Activo" filterBy="#{cuentas.cueActiva}"
 					filterMatchMode="contains">
 					<f:facet name="filter">
@@ -100,7 +89,6 @@
 					</f:facet>
 					<h:outputText value="#{cuentas.cueActiva}" />
 				</p:column>
-
 				<f:facet name="footer">
 					<div align="right">
 						<p:commandButton value="Inactivar - Activar" id="inactivar"
@@ -112,11 +100,8 @@
 							styleClass="ui-priority-primary" update="formCuentas" />
 					</div>
 				</f:facet>
-
 			</p:dataTable>
-
 		</h:panelGrid>
-
 	</h:form>
 </h:body>
 </html>
