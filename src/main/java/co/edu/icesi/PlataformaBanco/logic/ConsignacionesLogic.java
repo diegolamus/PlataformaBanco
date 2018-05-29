@@ -1,6 +1,7 @@
 package co.edu.icesi.PlataformaBanco.logic;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,8 +105,22 @@ public class ConsignacionesLogic implements IConsignacionesLogic {
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente){
 		return consignacionesDAO.consultarConsignacionesPorCliente(cedulaCliente);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Consignaciones> consultarConsignacionesPorClientePorRangoFechas(long cedulaCliente,Date Inicio,Date fin){
+		return consignacionesDAO.consultarConsignacionesPorClientePorRangoFechas(cedulaCliente, Inicio, fin);
+	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<Consignaciones> consultarConsignacionesPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date inicio, Date fin, Cuentas cuenta) throws Exception{
+		if(cuenta.getClientes().getCliId()!= cedulaCliente)
+			throw new Exception("La cuenta ingresada no pertenece al cliente");
+		return consignacionesDAO.consultarConsignacionesPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
+	}
 }

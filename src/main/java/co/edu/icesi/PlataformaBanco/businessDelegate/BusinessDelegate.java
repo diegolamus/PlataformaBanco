@@ -1,10 +1,12 @@
 package co.edu.icesi.PlataformaBanco.businessDelegate;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
 import co.edu.icesi.PlataformaBanco.logic.IClienteLogic;
 import co.edu.icesi.PlataformaBanco.logic.IConsignacionesLogic;
 import co.edu.icesi.PlataformaBanco.logic.ICuentasLogic;
@@ -146,8 +148,45 @@ public class BusinessDelegate implements IBusinessDelegate {
 	public List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente){
 		return consignacionesLogic.consultarConsignacionesPorCliente(cedulaCliente);
 	}
-
 	
+	@Override
+	public List<Retiros> consultarRetirosPorCliente(long cedulaCliente){
+		return retirosLogic.consultarRetirosPorCliente(cedulaCliente);
+	}	
+	
+	@Override
+	public List<Transferencias> consultarTransferenciasPorCliente(long cedulaCliente){
+		return transferencuasLogic.consultarTransferenciasPorCliente(cedulaCliente);
+	}
 
+	@Override
+	public List<Consignaciones> consultarConsignacionesPorClientePorRangoFechas(long cedulaCliente,Date Inicio,Date fin){
+		return consignacionesLogic.consultarConsignacionesPorClientePorRangoFechas(cedulaCliente, Inicio, fin);
+	}
+	
+	@Override
+	public List<Retiros> consultarRetirosPorClientePorRangoFechas(long cedulaCliente,Date Inicio,Date fin){
+		return retirosLogic.consultarRetirosPorClientePorRangoFechas(cedulaCliente, Inicio, fin);
+	}
+	
+	@Override
+	public List<Transferencias> consultarTransferenciasPorClientePorRangoFechas(long cedulaCliente,Date Inicio,Date fin){
+		return transferencuasLogic.consultarTransferenciasPorClientePorRangoFechas(cedulaCliente, Inicio, fin);
+	}
+	
+	@Override
+	public List<Transferencias> consultarTransferenciasPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date inicio, Date fin, Cuentas cuenta) throws Exception{
+		return transferencuasLogic.consultarTransferenciasPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
+	}
+	
+	@Override
+	public List<Consignaciones> consultarConsignacionesPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date inicio, Date fin, Cuentas cuenta) throws Exception{
+		return consignacionesLogic.consultarConsignacionesPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
+	}
+	
+	@Override
+	public List<Retiros> consultarRetirosPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date Inicio, Date fin, Cuentas cuenta) throws Exception{
+		return retirosLogic.consultarRetirosPorClientePorRangoFechasPorCuenta(cedulaCliente, Inicio, fin, cuenta);
+	}
 
 }

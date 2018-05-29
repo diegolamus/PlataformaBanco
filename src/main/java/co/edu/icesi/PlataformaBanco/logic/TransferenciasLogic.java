@@ -1,6 +1,7 @@
 package co.edu.icesi.PlataformaBanco.logic;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,6 +121,26 @@ public class TransferenciasLogic implements ITransferenciasLogic {
 	@Transactional(readOnly = true)
 	public List<Transferencias> findAll() throws Exception {
 		return transferenciasDAO.findAll();
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Transferencias> consultarTransferenciasPorCliente(long cedulaCliente){
+		return transferenciasDAO.consultarTransferenciasPorCliente(cedulaCliente);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Transferencias> consultarTransferenciasPorClientePorRangoFechas(long cedulaCliente,Date Inicio,Date fin){
+		return transferenciasDAO.consultarTransferenciasPorClientePorRangoFechas(cedulaCliente, Inicio, fin);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Transferencias> consultarTransferenciasPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date inicio, Date fin, Cuentas cuenta) throws Exception{
+		if(cuenta.getClientes().getCliId()!= cedulaCliente)
+			throw new Exception("La cuenta ingresada no pertenece al cliente");
+		return transferenciasDAO.consultarTransferenciasPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
 	}
 
 }

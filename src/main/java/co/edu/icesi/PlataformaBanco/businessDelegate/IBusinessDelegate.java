@@ -1,5 +1,6 @@
 package co.edu.icesi.PlataformaBanco.businessDelegate;
 
+import java.util.Date;
 import java.util.List;
 
 import co.edu.icesi.PlataformaBanco.modelo.Clientes;
@@ -49,5 +50,13 @@ public interface IBusinessDelegate {
 	//Consultas
 	List<Cuentas> consultarCuentasPorCliente(long cedulaCliente);
 	List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente);
+	List<Retiros> consultarRetirosPorCliente(long cedulaCliente);
+	List<Transferencias> consultarTransferenciasPorCliente(long cedulaCliente);
+	List<Consignaciones> consultarConsignacionesPorClientePorRangoFechas(long cedulaCliente, Date Inicio, Date fin);
+	List<Retiros> consultarRetirosPorClientePorRangoFechas(long cedulaCliente, Date Inicio, Date fin);
+	List<Transferencias> consultarTransferenciasPorClientePorRangoFechas(long cedulaCliente, Date Inicio, Date fin);
+	List<Transferencias> consultarTransferenciasPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date inicio,Date fin, Cuentas cuenta) throws Exception;
+	List<Consignaciones> consultarConsignacionesPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date inicio,Date fin, Cuentas cuenta) throws Exception;
+	List<Retiros> consultarRetirosPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date Inicio, Date fin,Cuentas cuenta) throws Exception;
 	
 }

@@ -1,6 +1,7 @@
 package co.edu.icesi.PlataformaBanco.logic;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,24 @@ public class RetirosLogic implements IRetirosLogic {
 	@Transactional(readOnly = true)
 	public List<Retiros> findAll() throws Exception {
 		return retirosDAO.findAll();
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Retiros> consultarRetirosPorCliente(long cedulaCliente){
+		return retirosDAO.consultarRetirosPorCliente(cedulaCliente);
+	}
+	@Override
+	@Transactional(readOnly = true)
+	public List<Retiros> consultarRetirosPorClientePorRangoFechas(long cedulaCliente,Date Inicio,Date fin){
+		return retirosDAO.consultarRetirosPorClientePorRangoFechas(cedulaCliente, Inicio, fin);
+	}
+	
+	@Override
+	public List<Retiros> consultarRetirosPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date Inicio, Date fin, Cuentas cuenta) throws Exception{
+		if(cuenta.getClientes().getCliId()!= cedulaCliente)
+			throw new Exception("La cuenta ingresada no pertenece al cliente");
+		return retirosDAO.consultarRetirosPorClientePorRangoFechasPorCuenta(cedulaCliente, Inicio, fin, cuenta);
 	}
 
 }

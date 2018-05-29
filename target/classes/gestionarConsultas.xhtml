@@ -15,23 +15,31 @@
 		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 			<h:outputText value="Cedula cliente" />
 			<p:inputText id="clienteIdentificacion"
-				value="#{consultasView.cedulaUsuario}"
-				converterMessage="Por favor ingresa solo dígitos en el id">
+				value="#{consultasView.cedulaCliente}"
+				converterMessage="Por favor ingresa solo dígitos en el id"
+				binding="#{consultasView.txtCedulaCliente}">
+				<p:ajax listener="#{consultasView.listener_buscarCliente}"
+					update="formConsultas, growl5"></p:ajax>
 			</p:inputText>
 			<p:outputLabel for="fechaInicio" value="Fecha Inicio" />
 			<p:calendar id="fechaInicio"
 				value="#{consultasView.date_fechaInicio}"
-				binding="#{consultasView.calendar_fechaInicio}" />
+				binding="#{consultasView.calendar_fechaInicio}"
+				disabled="true" />
 			<p:outputLabel for="fechaFin" value="Fecha Fin" />
 			<p:calendar id="fechaFin" value="#{consultasView.date_fechaFinal}"
-				binding="#{consultasView.calendar_fechaFinal}" />
+				binding="#{consultasView.calendar_fechaFinal}"
+				disabled="true" />
 			<h:outputText value="Cuenta cliente" />
 			<p:inputText id="numeroCuenta"
-				binding="#{consultasView.txtNumeroCuenta}">
+				binding="#{consultasView.txtNumeroCuenta}"
+				disabled="true">
 			</p:inputText>
 			<p:commandButton value="Buscar" id="btnBuscar"
 				action="#{consultasView.action_buscar}"
-				styleClass="ui-priority-primary" update="formConsultas, growl5" />
+				styleClass="ui-priority-primary" update="formConsultas, growl5"
+				binding="#{consultasView.btnBuscar}"
+				disabled="true" />
 			<p:commandButton value="Limpiar" id="btnLimpiar"
 				action="#{consultasView.action_limpiar}"
 				styleClass="ui-priority-primary" update="formConsultas, growl5" />
@@ -45,8 +53,8 @@
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 					scrollable="TRUE" scrollHeight="250"
 					value="#{consultasView.cuentas}">
-					<p:column headerText="Número cuenta" filterBy="#{cuentas.cueNumero}"
-						filterMatchMode="contains">
+					<p:column headerText="Número cuenta"
+						filterBy="#{cuentas.cueNumero}" filterMatchMode="contains">
 						<h:outputText value="#{cuentas.cueNumero}" />
 					</p:column>
 					<p:column headerText="Cédula cliente"
@@ -74,7 +82,7 @@
 			</p:tab>
 			<p:tab title="Consignaciones">
 				<p:dataTable widgetVar="tblConsignaciones" var="consignaciones"
-					rows="12" paginator="true" 
+					rows="12" paginator="true"
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 					scrollable="TRUE" scrollHeight="250"
 					value="#{consultasView.consignaciones}">

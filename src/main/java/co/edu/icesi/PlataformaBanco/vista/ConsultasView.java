@@ -1,18 +1,22 @@
 package co.edu.icesi.PlataformaBanco.vista;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
 import org.primefaces.component.calendar.Calendar;
+import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.icesi.PlataformaBanco.businessDelegate.IBusinessDelegate;
-
+import co.edu.icesi.PlataformaBanco.modelo.Clientes;
 import co.edu.icesi.PlataformaBanco.modelo.Consignaciones;
 import co.edu.icesi.PlataformaBanco.modelo.Cuentas;
 import co.edu.icesi.PlataformaBanco.modelo.Retiros;
@@ -25,20 +29,39 @@ public class ConsultasView {
 	@ManagedProperty(value = "#{businessDelegate}")
 	private IBusinessDelegate businessDelegate;
 
+	private InputText txtCedulaCliente;
 	private long cedulaCliente;
 	private Date date_fechaInicio;
 	private Date date_fechaFinal;
 	private Calendar calendar_fechaInicio;
 	private Calendar calendar_fechaFinal;
 	private InputText txtNumeroCuenta;
+	private CommandButton btnBuscar;
 
 	private List<Cuentas> cuentas;
 	private List<Transferencias> transferencias;
 	private List<Consignaciones> consignaciones;
 	private List<Retiros> retiros;
+	
+	public void listener_buscarCliente() {
+		try {
+			@SuppressWarnings("unused")
+			Clientes cliente = businessDelegate.findClienteByID(cedulaCliente);
+			calendar_fechaInicio.setDisabled(false);
+			calendar_fechaFinal.setDisabled(false);
+			txtNumeroCuenta.setDisabled(false);
+			btnBuscar.setDisabled(false);
+			txtCedulaCliente.setDisabled(true);
+		} catch (Exception e) {
+			// Si el cliente no existe se retorna una excepcion
+			FacesContext.getCurrentInstance().addMessage("",
+					new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
+		}
 
+	} 
 	public String action_buscar() {
-		// Se ponen listas en null para que se ejecuten los get y se hagan los filtros correspondientes
+		// Se ponen listas en null para que se ejecuten los get y se hagan los filtros
+		// correspondientes
 		cuentas = null;
 		transferencias = null;
 		consignaciones = null;
@@ -56,6 +79,11 @@ public class ConsultasView {
 		transferencias = null;
 		consignaciones = null;
 		retiros = null;
+		calendar_fechaInicio.setDisabled(true);
+		calendar_fechaFinal.setDisabled(true);
+		txtNumeroCuenta.setDisabled(true);
+		btnBuscar.setDisabled(true);
+		txtCedulaCliente.setDisabled(false);
 		return "";
 	}
 
@@ -65,14 +93,6 @@ public class ConsultasView {
 
 	public void setBusinessDelegate(IBusinessDelegate businessDelegate) {
 		this.businessDelegate = businessDelegate;
-	}
-
-	public long getCedulaUsuario() {
-		return cedulaCliente;
-	}
-
-	public void setCedulaUsuario(long cedulaUsuario) {
-		this.cedulaCliente = cedulaUsuario;
 	}
 
 	public Date getDate_fechaInicio() {
@@ -117,13 +137,12 @@ public class ConsultasView {
 
 	@Transactional(readOnly = true)
 	public List<Cuentas> getCuentas() {
-		if(cuentas ==null) {
+		if (cuentas == null) {
 			try {
-				if(cedulaCliente!=0) {
-						cuentas = businessDelegate.consultarCuentasPorCliente(cedulaCliente);
-				}else
-					cuentas = businessDelegate.findAllCuentas();
-			}catch (Exception e) {
+				if (cedulaCliente != 0) {
+					cuentas = businessDelegate.consultarCuentasPorCliente(cedulaCliente);
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -137,38 +156,26 @@ public class ConsultasView {
 	public List<Transferencias> getTransferencias() {
 		if (transferencias == null) {
 			try {
-				List<Transferencias> eliminar = new ArrayList<>();
-				transferencias = businessDelegate.findAllTransferencia();
-				if (cedulaCliente != 0) {
-					for (Transferencias transferencias2 : transferencias) {
-						if (!(transferencias2.getCuentasByOrigenCueNumero().getClientes().getCliId() == cedulaCliente) && !eliminar.contains(transferencias2))
-							eliminar.add(transferencias2);
-					}
-				}
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				Date inicio = sdf.parse("21/12/1900");
+				Date fin = new Date();
 				if (date_fechaInicio != null) {
-					for (Transferencias transferencias2 : transferencias) {
-						if (transferencias2.getTranFecha().compareTo(date_fechaInicio) < 0 && !eliminar.contains(transferencias2))
-							eliminar.add(transferencias2);
-					}
+					inicio = date_fechaInicio;
 				}
 				if (date_fechaFinal != null) {
-					for (Transferencias transferencias2 : transferencias) {
-						if (transferencias2.getTranFecha().compareTo(date_fechaFinal) > 0 && !eliminar.contains(transferencias2))
-							eliminar.add(transferencias2);
-					}
+					fin = date_fechaFinal;
 				}
-				if (txtNumeroCuenta.getValue()!= null && !txtNumeroCuenta.getValue().toString().trim().equals("")) {
-					for (Transferencias transferencias2 : transferencias) {
-						if (!transferencias2.getCuentasByOrigenCueNumero().getCueNumero()
-								.equals(txtNumeroCuenta.getValue().toString()) && !eliminar.contains(transferencias2))
-							eliminar.add(transferencias2);
-					}
-				}
-				for (Transferencias transferencia : eliminar) {
-					transferencias.remove(transferencia);
+				if(date_fechaInicio ==null&& date_fechaFinal==null)
+					transferencias = businessDelegate.consultarTransferenciasPorCliente(cedulaCliente);
+				else if(txtNumeroCuenta.getValue() == null || txtNumeroCuenta.getValue().toString().trim().equals(""))
+					transferencias = businessDelegate.consultarTransferenciasPorClientePorRangoFechas(cedulaCliente, inicio, fin);
+				else if(!txtNumeroCuenta.getValue().toString().trim().equals("")){
+					Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta.getValue().toString().trim());
+					transferencias = businessDelegate.consultarTransferenciasPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
 			}
 		}
 		return transferencias;
@@ -181,38 +188,26 @@ public class ConsultasView {
 	public List<Consignaciones> getConsignaciones() {
 		if (consignaciones == null) {
 			try {
-				List<Consignaciones> eliminar = new ArrayList<>();
-				consignaciones = businessDelegate.findAllConsiganciones();
-				if (cedulaCliente != 0) {
-					for (Consignaciones consignaciones2 : consignaciones) {
-						if (!(consignaciones2.getCuentas().getClientes().getCliId() == cedulaCliente)&& !eliminar.contains(consignaciones2))
-							eliminar.add(consignaciones2);
-					}
-				}
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				Date inicio = sdf.parse("21/12/1900");
+				Date fin = new Date();
 				if (date_fechaInicio != null) {
-					for (Consignaciones consignaciones2 : consignaciones) {
-						if (consignaciones2.getConFecha().compareTo(date_fechaInicio) < 0 && !eliminar.contains(consignaciones2))
-							eliminar.add(consignaciones2);
-					}
+					inicio = date_fechaInicio;
 				}
 				if (date_fechaFinal != null) {
-					for (Consignaciones consignaciones2 : consignaciones) {
-						if (consignaciones2.getConFecha().compareTo(date_fechaFinal) > 0 && !eliminar.contains(consignaciones2))
-							eliminar.add(consignaciones2);
-					}
+					fin = date_fechaFinal;
 				}
-				if (txtNumeroCuenta.getValue()!= null && !txtNumeroCuenta.getValue().toString().trim().equals("")) {
-					for (Consignaciones consignaciones2 : consignaciones) {
-						if (!consignaciones2.getCuentas().getCueNumero()
-								.equals(txtNumeroCuenta.getValue().toString()) &&!eliminar.contains(consignaciones2))
-							eliminar.add(consignaciones2);
-					}
-				}
-				for (Consignaciones consignacion : eliminar) {
-					consignaciones.remove(consignacion);
+				if(date_fechaInicio ==null&& date_fechaFinal==null)
+					consignaciones = businessDelegate.consultarConsignacionesPorCliente(cedulaCliente);
+				else if(txtNumeroCuenta.getValue() == null || txtNumeroCuenta.getValue().toString().trim().equals(""))
+					consignaciones = businessDelegate.consultarConsignacionesPorClientePorRangoFechas(cedulaCliente, inicio, fin);
+				else if(!txtNumeroCuenta.getValue().toString().trim().equals("")){
+					Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta.getValue().toString().trim());
+					consignaciones = businessDelegate.consultarConsignacionesPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
 			}
 		}
 		return consignaciones;
@@ -224,39 +219,27 @@ public class ConsultasView {
 
 	public List<Retiros> getRetiros() {
 		if (retiros == null) {
-			try {
-				List<Retiros> eliminar = new ArrayList<>();
-				retiros = businessDelegate.findAllRetiros();
-				if (cedulaCliente != 0) {
-					for (Retiros retiros2 : retiros) {
-						if (!(retiros2.getCuentas().getClientes().getCliId() == cedulaCliente)&& !eliminar.contains(retiros2))
-							eliminar.add(retiros2);
-					}
-				}
+			try {			
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				Date inicio = sdf.parse("21/12/1900");
+				Date fin = new Date();
 				if (date_fechaInicio != null) {
-					for (Retiros retiros2 : retiros) {
-						if (retiros2.getRetFecha().compareTo(date_fechaInicio) < 0&& !eliminar.contains(retiros2))
-							eliminar.add(retiros2);
-					}
+					inicio = date_fechaInicio;
 				}
 				if (date_fechaFinal != null) {
-					for (Retiros retiros2 : retiros) {
-						if (retiros2.getRetFecha().compareTo(date_fechaFinal) > 0&& !eliminar.contains(retiros2))
-							eliminar.add(retiros2);
-					}
+					fin = date_fechaFinal;
 				}
-				if (txtNumeroCuenta.getValue()!= null && !txtNumeroCuenta.getValue().toString().trim().equals("")) {
-					for (Retiros retiros2 : retiros) {
-						if (!retiros2.getCuentas().getCueNumero()
-								.equals(txtNumeroCuenta.getValue().toString())&& !eliminar.contains(retiros2))
-							eliminar.add(retiros2);
-					}
-				}
-				for (Retiros retiro : eliminar) {
-					retiros.remove(retiro); 
+				if(date_fechaInicio ==null&& date_fechaFinal==null)
+					retiros = businessDelegate.consultarRetirosPorCliente(cedulaCliente);
+				else if(txtNumeroCuenta.getValue() == null || txtNumeroCuenta.getValue().toString().trim().equals(""))
+					retiros = businessDelegate.consultarRetirosPorClientePorRangoFechas(cedulaCliente, inicio, fin);
+				else if(!txtNumeroCuenta.getValue().toString().trim().equals("")){
+					Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta.getValue().toString().trim());
+					retiros = businessDelegate.consultarRetirosPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
 			}
 		}
 		return retiros;
@@ -265,5 +248,26 @@ public class ConsultasView {
 	public void setRetiros(List<Retiros> retiros) {
 		this.retiros = retiros;
 	}
+	public long getCedulaCliente() {
+		return cedulaCliente;
+	}
+	public void setCedulaCliente(long cedulaCliente) {
+		this.cedulaCliente = cedulaCliente;
+	}
+	public CommandButton getBtnBuscar() {
+		return btnBuscar;
+	}
+	public void setBtnBuscar(CommandButton btnBuscar) {
+		this.btnBuscar = btnBuscar;
+	}
+	public InputText getTxtCedulaCliente() {
+		return txtCedulaCliente;
+	}
+	public void setTxtCedulaCliente(InputText txtCedulaCliente) {
+		this.txtCedulaCliente = txtCedulaCliente;
+	}
+	
+	
+	
 
 }
