@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.inputtextarea.InputTextarea;
@@ -36,8 +35,6 @@ public class GestionarTransaccionesView {
 	private int tanIndex;
 
 	// Atributos consignacion
-	private InputText txtCodigoConsignacion;
-	private long codigoConsignacion;
 	private InputText txtNumeroCuenta_consignacion;
 	private InputText txtCedulaUsuario_consignacion;
 	private long cedulaUsuario_consignacion;
@@ -49,8 +46,6 @@ public class GestionarTransaccionesView {
 	private List<Consignaciones> consignaciones;
 
 	// Atributos retiros
-	private InputText txtCodigoRetiro;
-	private long codigoRetiro;
 	private InputText txtNumeroCuenta_Retiro;
 	private InputText txtCedulaUsuario_Retiro;
 	private long cedulaUsuario_Retiro;
@@ -62,8 +57,6 @@ public class GestionarTransaccionesView {
 	private List<Retiros> retiros;
 
 	// Atributos transferencias
-	private InputText txtCodigoTransferencia;
-	private long codigoTransferencia;
 	private InputText txtNumeroCuenta_origen_Transferencia;
 	private InputText txtNumeroCuenta_destino_Transferencia;
 	private InputText txtCedulaUsuario_Transferencia;
@@ -144,7 +137,6 @@ public class GestionarTransaccionesView {
 		Consignaciones consignacion = new Consignaciones();
 		// Se crea el id de la consignacion
 		ConsignacionesId consignacionId = new ConsignacionesId();
-		consignacionId.setConCodigo(codigoConsignacion);
 		consignacionId.setCueNumero(txtNumeroCuenta_consignacion.getValue().toString());
 		consignacion.setId(consignacionId);
 		try {
@@ -159,9 +151,7 @@ public class GestionarTransaccionesView {
 			// Se asigna la fecha de la consignacion
 			consignacion.setConFecha(new Date());
 			// Se agrega la descripción a la consignacion
-			String observacion =descripcion_consignacion.getValue().toString();
-			consignacion.setConDescripcion(observacion);
-			descripcion_consignacion.setValue(observacion);
+			consignacion.setConDescripcion(descripcion_consignacion.getValue().toString());
 			businessDelegate.crearConsigancion(consignacion);
 			consignaciones = null;
 			action_limpiarConsignacion();
@@ -177,7 +167,6 @@ public class GestionarTransaccionesView {
 	}
 
 	public String action_limpiarConsignacion() {
-		codigoConsignacion = 0;
 		txtNumeroCuenta_consignacion.resetValue();
 		cedulaUsuario_consignacion = 0;
 		valorConsignacion = null;
@@ -194,7 +183,6 @@ public class GestionarTransaccionesView {
 		// Se crea el id del retiro
 		RetirosId retirosId = new RetirosId();
 		retirosId.setCueNumero(txtNumeroCuenta_Retiro.getValue().toString());
-		retirosId.setRetCodigo(codigoRetiro);
 		retiro.setId(retirosId);
 		try {
 			// Se busca la cuenta del retiro
@@ -224,7 +212,6 @@ public class GestionarTransaccionesView {
 	}
 
 	public String action_limpiarRetiro() {
-		codigoRetiro = 0;
 		txtNumeroCuenta_Retiro.resetValue();
 		cedulaUsuario_Retiro = 0;
 		valorRetiro = null;
@@ -242,12 +229,11 @@ public class GestionarTransaccionesView {
 		TransferenciasId transId = new TransferenciasId();
 		transId.setOrigenCueNumero(txtNumeroCuenta_origen_Transferencia.getValue().toString());
 		transId.setDestinoCueNumero(txtNumeroCuenta_destino_Transferencia.getValue().toString());
-		transId.setTranCodigo(codigoTransferencia);
 		transferencia.setId(transId);
 		try {
 			// Se busca la cuenta de origen de la transfrenecia
 			Cuentas cuentaOrigen = businessDelegate
-					.findCuentaByID(txtNumeroCuenta_origen_Transferencia.getValue().toString().trim());
+					.findCuentaByID(txtNumeroCuenta_origen_Transferencia.getValue().toString());
 			transferencia.setCuentasByOrigenCueNumero(cuentaOrigen);
 			// Se busca la cuenta de destino de la transfrenecia
 			Cuentas cuentaDestino = businessDelegate
@@ -279,7 +265,6 @@ public class GestionarTransaccionesView {
 	}
 
 	public String action_limpiarTransferencia() {
-		codigoTransferencia = 0;
 		txtNumeroCuenta_origen_Transferencia.resetValue();
 		txtNumeroCuenta_destino_Transferencia.resetValue();
 		cedulaUsuario_Transferencia = 0;
@@ -334,22 +319,6 @@ public class GestionarTransaccionesView {
 
 	public void setTransferencias(List<Transferencias> transferencias) {
 		this.transferencias = transferencias;
-	}
-
-	public InputText getTxtCodigoTransferencia() {
-		return txtCodigoTransferencia;
-	}
-
-	public void setTxtCodigoTransferencia(InputText txtCodigoTransferencia) {
-		this.txtCodigoTransferencia = txtCodigoTransferencia;
-	}
-
-	public long getCodigoTransferencia() {
-		return codigoTransferencia;
-	}
-
-	public void setCodigoTransferencia(long codigoTransferencia) {
-		this.codigoTransferencia = codigoTransferencia;
 	}
 
 	public InputText getTxtNumeroCuenta_origen_Transferencia() {
@@ -448,22 +417,6 @@ public class GestionarTransaccionesView {
 		this.btnGuardar_consignacion = btnGuardar_consignacion;
 	}
 
-	public InputText getTxtCodigoRetiro() {
-		return txtCodigoRetiro;
-	}
-
-	public void setTxtCodigoRetiro(InputText txtCodigoRetiro) {
-		this.txtCodigoRetiro = txtCodigoRetiro;
-	}
-
-	public long getCodigoRetiro() {
-		return codigoRetiro;
-	}
-
-	public void setCodigoRetiro(long codigoRetiro) {
-		this.codigoRetiro = codigoRetiro;
-	}
-
 	public InputText getTxtNumeroCuenta_Retiro() {
 		return txtNumeroCuenta_Retiro;
 	}
@@ -543,23 +496,6 @@ public class GestionarTransaccionesView {
 	public void setBusinessDelegate(IBusinessDelegate businessDelegate) {
 		this.businessDelegate = businessDelegate;
 	}
-
-	public InputText getTxtCodigoConsignacion() {
-		return txtCodigoConsignacion;
-	}
-
-	public void setTxtCodigoConsignacion(InputText txtCodigoConsignacion) {
-		this.txtCodigoConsignacion = txtCodigoConsignacion;
-	}
-
-	public long getCodigoConsignacion() {
-		return codigoConsignacion;
-	}
-
-	public void setCodigoConsignacion(long codigoConsignacion) {
-		this.codigoConsignacion = codigoConsignacion;
-	}
-
 	public InputText getTxtNumeroCuenta_consignacion() {
 		return txtNumeroCuenta_consignacion;
 	}

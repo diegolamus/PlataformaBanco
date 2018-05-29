@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputmask.InputMask;
 import org.primefaces.component.inputtext.InputText;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 
 import co.edu.icesi.PlataformaBanco.businessDelegate.IBusinessDelegate;
 import co.edu.icesi.PlataformaBanco.modelo.Clientes;
@@ -33,6 +34,7 @@ public class GestionarClienteView {
 	private InputMask txtTelefono;
 	private String telefono;
 	private InputText txtMail;
+	private SelectOneMenu menutipodoc;
 
 	private CommandButton btnGuardar;
 	private CommandButton btnModificar;
@@ -46,22 +48,23 @@ public class GestionarClienteView {
 
 	public void listener_buscarCliente() {
 		try {
+			@SuppressWarnings("unused")
 			Clientes cliente = businessDelegate.findClienteByID(txtIdentificacion);
-			if (cliente != null)
-				FacesContext.getCurrentInstance().addMessage("", new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"El cliente ya existe", ""));
-			else {
-				txtNombre.setDisabled(false);
-				txtDireccion.setDisabled(false);
-				txtTelefono.setDisabled(false);
-				txtMail.setDisabled(false);
-				btnGuardar.setDisabled(false);
-			}
+			FacesContext.getCurrentInstance().addMessage("",
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "El cliente ya existe", ""));
 		} catch (Exception e) {
-			e.printStackTrace();
+			// Si el cliente no existe se retorna una excepcion
+			txtIdentificacion2.setDisabled(true);
+			txtNombre.setDisabled(false);
+			txtDireccion.setDisabled(false);
+			txtTelefono.setDisabled(false);
+			txtMail.setDisabled(false);
+			btnGuardar.setDisabled(false);
+			menutipodoc.setDisabled(false);
 		}
-		
+
 	}
+
 	public String action_editar() {
 		Clientes cliente = selectedCliente;
 		if (cliente == null)
@@ -83,9 +86,16 @@ public class GestionarClienteView {
 			txtDireccion.setValue(cliente.getCliDireccion());
 			setTelefono(cliente.getCliTelefono());
 			txtMail.setValue(cliente.getCliMail());
+			txtIdentificacion2.setDisabled(true);
+			txtNombre.setDisabled(false);
+			txtDireccion.setDisabled(false);
+			txtTelefono.setDisabled(false);
+			txtMail.setDisabled(false);
+			menutipodoc.setDisabled(false);
 		}
 		return "";
 	}
+
 	public String action_inactivar() {
 		Clientes cliente = selectedCliente;
 		if (cliente == null)
@@ -100,8 +110,8 @@ public class GestionarClienteView {
 				FacesContext.getCurrentInstance().addMessage("",
 						new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
 			}
-		}	
-		return"";
+		}
+		return "";
 	}
 
 	public String action_guardar() {
@@ -196,13 +206,15 @@ public class GestionarClienteView {
 		valueTipoIdentificacion = -1;
 		txtNombre.resetValue();
 		txtDireccion.resetValue();
-		txtTelefono.resetValue();
+		telefono = "";
 		txtMail.resetValue();
 		txtNombre.setDisabled(true);
 		txtDireccion.setDisabled(true);
 		txtTelefono.setDisabled(true);
 		txtMail.setDisabled(true);
 		btnGuardar.setDisabled(true);
+		txtIdentificacion2.setDisabled(false);
+		menutipodoc.setDisabled(true);
 		return "";
 	}
 
@@ -264,6 +276,13 @@ public class GestionarClienteView {
 
 	public CommandButton getBtnModificar() {
 		return btnModificar;
+	}
+	public SelectOneMenu getTipodoc() {
+		return menutipodoc;
+	}
+
+	public void setTipodoc(SelectOneMenu menutipodoc) {
+		this.menutipodoc = menutipodoc;
 	}
 
 	public void setBtnModificar(CommandButton btnModificar) {
@@ -350,5 +369,14 @@ public class GestionarClienteView {
 	public void setSelectedCliente(Clientes selectedCliente) {
 		this.selectedCliente = selectedCliente;
 	}
+
+	public SelectOneMenu getMenutipodoc() {
+		return menutipodoc;
+	}
+
+	public void setMenutipodoc(SelectOneMenu menutipodoc) {
+		this.menutipodoc = menutipodoc;
+	}
+	
 
 }

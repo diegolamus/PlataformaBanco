@@ -37,6 +37,13 @@ public class TransferenciasLogic implements ITransferenciasLogic {
 		// Validamos que el id de la transferencia no sea nulo
 		if (entity.getId() == null)
 			throw new Exception("Debe ingresar una id valida");
+		//Asignamos el numero de la transferencia
+		long max = 0;
+		List<Transferencias> transfer = transferenciasDAO.findAll();
+		for (Transferencias tran : transfer) {
+			max = (tran.getId().getTranCodigo()>max)? max = tran.getId().getTranCodigo(): max;
+		}
+		entity.getId().setTranCodigo(max+1);
 		// Validamos que el id de la transferencia sea valido
 		if (entity.getId().getTranCodigo() == 0 || entity.getId().getDestinoCueNumero() == null
 				|| entity.getId().getDestinoCueNumero().trim().equals("") || entity.getId().getOrigenCueNumero() == null
@@ -55,11 +62,11 @@ public class TransferenciasLogic implements ITransferenciasLogic {
 		if (!entity.getId().getOrigenCueNumero().equals(entity.getCuentasByOrigenCueNumero().getCueNumero()))
 			throw new Exception("La  cuenta de origen no coincide con el numero de cuenta asociado");
 		// Validamos que la cuenta de destino exista
-		Cuentas cuentaOrigen= cuentasDAO.findById(entity.getCuentasByDestinoCueNumero().getCueNumero());
+		Cuentas cuentaOrigen= cuentasDAO.findById(entity.getCuentasByOrigenCueNumero().getCueNumero());
 		if (cuentaOrigen == null)
 			throw new Exception("La cuenta de destino no existe");
 		// Validamos que la cuenta de origen exista
-		Cuentas cuentaDestino = cuentasDAO.findById(entity.getCuentasByOrigenCueNumero().getCueNumero());
+		Cuentas cuentaDestino = cuentasDAO.findById(entity.getCuentasByDestinoCueNumero().getCueNumero());
 		if (cuentaDestino == null)
 			throw new Exception("La cuenta de origen no existe");
 		// Validamos que el usuario asociado a la transferencia no sea nulo
@@ -77,7 +84,10 @@ public class TransferenciasLogic implements ITransferenciasLogic {
 			throw new Exception("Debe ingresar una fecha");
 		//Validamos que la cuenta de origen tenga fondos suficientes
 		if(cuentaOrigen.getCueSaldo().subtract(entity.getTranValor()).compareTo(new BigDecimal("0"))<0)
-			throw new Exception("La cuenta no tiene fondos suficientes");
+			throw new Exception("La cuenta de origen no tiene fondos suficientes");
+		//Validamos que la cuenta de origen no sea igual a la cuenta de detino
+		if(cuentaOrigen.equals(cuentaDestino))
+			throw new Exception("La cuenta de origen es igual a la cuenta de destino");
 		//Disminuimos fondos de la cuenta origen
 		cuentaOrigen.setCueSaldo(cuentaOrigen.getCueSaldo().subtract(entity.getTranValor()));
 		//Aumentamos fondos de la cuenta destino

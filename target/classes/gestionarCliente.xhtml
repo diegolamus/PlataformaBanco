@@ -14,7 +14,7 @@
 		</p:growl>
 		<h3>Gestionar Cliente</h3>
 		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-			<h:outputText value="Cedula cliente" />
+			<h:outputText value="Cédula cliente" />
 			<p:inputText id="clienteIdentificacion"
 				value="#{gestionarClienteView.txtIdentificacion}"
 				converterMessage="Por favor ingresa solo dígitos en el id"
@@ -26,7 +26,9 @@
 
 			<h:outputText value="Tipo Documento" />
 			<p:selectOneMenu id="tipoDocumento" style="width:200px"
-				value="#{gestionarClienteView.valueTipoIdentificacion}">
+				value="#{gestionarClienteView.valueTipoIdentificacion}"
+				binding="#{gestionarClienteView.menutipodoc}"
+				disabled="true">
 				<f:selectItem itemLabel="Seleccione" itemValue="#{-1}"
 					noSelectionOption="true" />
 				<f:selectItems value="#{gestionarClienteView.lstTiposDoc}" />
@@ -87,7 +89,7 @@
 			scrollable="TRUE" scrollHeight="250"
 			value="#{gestionarClienteView.lstClientes}">
 
-			<p:column headerText="Id" filterBy="#{cliente.cliId}"
+			<p:column headerText="Cédula cliente" filterBy="#{cliente.cliId}"
 				filterMatchMode="contains">
 				<h:outputText value="#{cliente.cliId}" />
 			</p:column>

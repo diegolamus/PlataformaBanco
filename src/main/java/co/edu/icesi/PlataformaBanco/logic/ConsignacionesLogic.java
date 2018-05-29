@@ -36,6 +36,13 @@ public class ConsignacionesLogic implements IConsignacionesLogic {
 		//Validamos que el id de la consignación no sea nulo
 		if(entity.getId()==null)
 			throw new Exception("Debe ingresar una numero de consignación valida");
+		//Asignamos el numero de la consignacion
+		long max = 0;
+		List<Consignaciones> consig = consignacionesDAO.findAll();
+		for (Consignaciones consignaciones : consig) {
+			max = (consignaciones.getId().getConCodigo()>max)? max = consignaciones.getId().getConCodigo(): max;
+		}
+		entity.getId().setConCodigo(max+1);
 		//Validamos que el id de la consugnación sea valido
 		if(entity.getId().getConCodigo() == 0 || entity.getId().getCueNumero().trim().equals(""))
 			throw new Exception("El id de la consignación no es valido");
@@ -59,7 +66,7 @@ public class ConsignacionesLogic implements IConsignacionesLogic {
 		//Validamos que el valor de la consignacion no sea nulo o cero
 		if(entity.getConValor()==null)
 			throw new Exception("El valor ingresado no es valido");
-		if(entity.getConValor().compareTo(new BigDecimal(0))<0)
+		if(entity.getConValor().compareTo(new BigDecimal(0))<=0)
 			throw new Exception("El valor de la consignacion debe ser mayor a cero");
 		//Validamos que la fecha no sea nula
 		if(entity.getConFecha()== null)

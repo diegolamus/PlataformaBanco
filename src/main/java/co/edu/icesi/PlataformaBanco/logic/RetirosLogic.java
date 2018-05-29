@@ -37,6 +37,13 @@ public class RetirosLogic implements IRetirosLogic {
 		// Validamos que el id de la consignación no sea nulo
 		if (entity.getId() == null)
 			throw new Exception("Debe ingresar una id valida");
+		//Asignamos el numero del retiro
+		long max = 0;
+		List<Retiros> retiros = retirosDAO.findAll();
+		for (Retiros ret : retiros) {
+			max = (ret.getId().getRetCodigo()>max)? max = ret.getId().getRetCodigo(): max;
+		}
+		entity.getId().setRetCodigo(max+1);
 		// Validamos que el id de la consugnación sea valido
 		if (entity.getId().getRetCodigo() == 0 || entity.getId().getCueNumero().trim().equals(""))
 			throw new Exception("El id del retiro no es valido");

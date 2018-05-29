@@ -7,6 +7,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.component.inputtext.InputText;
+import org.primefaces.component.password.Password;
 
 import co.edu.icesi.PlataformaBanco.businessDelegate.IBusinessDelegate;
 import co.edu.icesi.PlataformaBanco.modelo.Usuarios;
@@ -19,7 +20,7 @@ public class LoginView {
 	private IBusinessDelegate businessDelegate;
 	
 	private long txtUsuario;
-	private InputText txtContrasenia;	
+	private Password txtContrasenia;	
 	
 	public String action_ingresar() {
 		try {
@@ -46,11 +47,12 @@ public class LoginView {
 	public void setTxtUsuario(long txtUsuario) {
 		this.txtUsuario = txtUsuario;
 	}
-	public InputText getTxtContrasenia() {
+	public Password getTxtContrasenia() {
 		return txtContrasenia;
 	}
-	public void setTxtContrasenia(InputText txtContrasenia) {
+	public void setTxtContrasenia(Password txtContrasenia) {
 		this.txtContrasenia = txtContrasenia;
 	}
+
 
 }
