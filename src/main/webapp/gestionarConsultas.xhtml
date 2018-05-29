@@ -45,11 +45,11 @@
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 					scrollable="TRUE" scrollHeight="250"
 					value="#{consultasView.cuentas}">
-					<p:column headerText="Id" filterBy="#{cuentas.cueNumero}"
+					<p:column headerText="Número cuenta" filterBy="#{cuentas.cueNumero}"
 						filterMatchMode="contains">
 						<h:outputText value="#{cuentas.cueNumero}" />
 					</p:column>
-					<p:column headerText="Cliente Id"
+					<p:column headerText="Cédula cliente"
 						filterBy="#{cuentas.clientes.cliId}" filterMatchMode="contains">
 						<h:outputText value="#{cuentas.clientes.cliId}" />
 					</p:column>

@@ -10,4 +10,5 @@ public interface IConsignacionesLogic {
 	public void save(Consignaciones entity) throws Exception ;
 	public Consignaciones findById(ConsignacionesId id) throws Exception ;
 	public List<Consignaciones> findAll() throws Exception ;
+	List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente);
 }

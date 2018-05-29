@@ -2,6 +2,7 @@ package co.edu.icesi.PlataformaBanco.logic;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -100,6 +101,11 @@ public class ConsignacionesLogic implements IConsignacionesLogic {
 	@Transactional(readOnly = true)
 	public List<Consignaciones> findAll() throws Exception {
 		return consignacionesDAO.findAll();
+	}
+	
+	@Override
+	public List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente){
+		return consignacionesDAO.consultarConsignacionesPorCliente(cedulaCliente);
 	}
 
 }

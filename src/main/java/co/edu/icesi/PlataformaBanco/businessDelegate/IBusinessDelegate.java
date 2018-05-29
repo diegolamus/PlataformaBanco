@@ -46,4 +46,8 @@ public interface IBusinessDelegate {
 	//Operaciones usuarios
 	public Usuarios findUsuarioById(long id) throws Exception;
 	
+	//Consultas
+	List<Cuentas> consultarCuentasPorCliente(long cedulaCliente);
+	List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente);
+	
 }

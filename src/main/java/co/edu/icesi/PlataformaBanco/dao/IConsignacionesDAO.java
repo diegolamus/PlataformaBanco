@@ -14,4 +14,5 @@ public interface IConsignacionesDAO {
 	public Consignaciones findById(ConsignacionesId id);
 	public List<Consignaciones> findAll();
 	public void invalidate(Consignaciones entity);
+	List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente);
 }

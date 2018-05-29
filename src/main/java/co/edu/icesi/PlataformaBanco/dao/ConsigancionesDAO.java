@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
@@ -43,6 +44,16 @@ public class ConsigancionesDAO implements IConsignacionesDAO {
 	@Override
 	public void invalidate(Consignaciones entity) {
 		em.merge(entity);	
+	}
+	
+	@Override
+	public List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente){
+		String jpql = "SELECT Con FROM Consignaciones Con WHERE Con.cuentas.clientes.cliId=:cedulaCliente";
+		Query query = em.createQuery(jpql);
+		query.setParameter("cedulaCliente", cedulaCliente);
+		@SuppressWarnings("unchecked")
+		List<Consignaciones> conisgnaciones = (List<Consignaciones>) query.getResultList();
+		return conisgnaciones;
 	}
 
 }

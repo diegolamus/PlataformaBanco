@@ -9,6 +9,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.inputtext.InputText;
+import org.springframework.transaction.annotation.Transactional;
+
 import co.edu.icesi.PlataformaBanco.businessDelegate.IBusinessDelegate;
 
 import co.edu.icesi.PlataformaBanco.modelo.Consignaciones;
@@ -113,20 +115,14 @@ public class ConsultasView {
 		this.txtNumeroCuenta = txtNumeroCuenta;
 	}
 
+	@Transactional(readOnly = true)
 	public List<Cuentas> getCuentas() {
 		if(cuentas ==null) {
 			try {
-				List<Cuentas> eliminar = new ArrayList<>();
-				cuentas = businessDelegate.findAllCuentas();
 				if(cedulaCliente!=0) {
-					for (Cuentas cuentas2 : cuentas) {
-						if(!(cuentas2.getClientes().getCliId()==cedulaCliente))
-							eliminar.add(cuentas2);
-					}
-				}
-				for (Cuentas cuenta : eliminar) {
-					cuentas.remove(cuenta);
-				}
+						cuentas = businessDelegate.consultarCuentasPorCliente(cedulaCliente);
+				}else
+					cuentas = businessDelegate.findAllCuentas();
 			}catch (Exception e) {
 				e.printStackTrace();
 			}

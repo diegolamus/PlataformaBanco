@@ -136,7 +136,16 @@ public class BusinessDelegate implements IBusinessDelegate {
 	public Usuarios findUsuarioById(long id) throws Exception {
 		return usuariosLogic.findById(id);
 	}
+	
+	@Override
+	public List<Cuentas> consultarCuentasPorCliente(long cedulaCliente){
+		return cuentasLogic.consultarCuentasPorCliente(cedulaCliente);
+	}
 
+	@Override
+	public List<Consignaciones> consultarConsignacionesPorCliente(long cedulaCliente){
+		return consignacionesLogic.consultarConsignacionesPorCliente(cedulaCliente);
+	}
 
 	
 

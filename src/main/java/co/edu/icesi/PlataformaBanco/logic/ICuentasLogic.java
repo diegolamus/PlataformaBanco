@@ -11,4 +11,5 @@ public interface ICuentasLogic {
 	public void invalidate(Cuentas entity) throws Exception ;
 	public Cuentas findById(String id) throws Exception ;
 	public List<Cuentas> findAll() throws Exception ;
+	List<Cuentas> consultarCuentasPorCliente(long cedulaCliente);
 }

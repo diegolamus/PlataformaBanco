@@ -123,5 +123,10 @@ public class CuentasLogic implements ICuentasLogic{
 	public List<Cuentas> findAll() throws Exception {
 		return cuentasDAO.findAll();
 	}
+	
+	@Override
+	public List<Cuentas> consultarCuentasPorCliente(long cedulaCliente){
+		return cuentasDAO.consultarCuentasPorCliente(cedulaCliente);
+	}
 
 }

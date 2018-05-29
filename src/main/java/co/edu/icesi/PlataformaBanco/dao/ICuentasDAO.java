@@ -12,4 +12,5 @@ public interface ICuentasDAO {
 	public Cuentas findById(String id);
 	public List<Cuentas> findAll();
 	public void invalidate(Cuentas entity);
+	List<Cuentas> consultarCuentasPorCliente(long cedulaCliente);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
@@ -50,6 +51,16 @@ public class CuentasDAO implements ICuentasDAO{
 	public void invalidate(Cuentas entity) {
 		em.merge(entity);
 		
+	}
+	
+	@Override
+	public List<Cuentas> consultarCuentasPorCliente(long cedulaCliente){
+		String jpql = "SELECT Cue FROM Cuentas Cue WHERE Cue.clientes.cliId=:cedulaCliente";
+		Query query = em.createQuery(jpql);
+		query.setParameter("cedulaCliente", cedulaCliente);
+		@SuppressWarnings("unchecked")
+		List<Cuentas> cuentas = (List<Cuentas>) query.getResultList();
+		return cuentas;
 	}
 
 }
