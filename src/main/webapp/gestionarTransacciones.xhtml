@@ -14,7 +14,8 @@
 		</p:growl>
 		<h3>Gestionar Transacciones</h3>
 		<h:panelGrid columns="1" style="margin-bottom:10px" cellpadding="5">
-			<p:tabView>
+			<p:tabView dynamic="true"
+				activeIndex="#{gestionarTransaccionesView.tanIndex}">
 				<p:tab title="Consignaciones">
 					<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 						<h:outputText value="Número Consignacion" />
@@ -43,11 +44,6 @@
 							binding="#{gestionarTransaccionesView.txtValorConsigancion}"
 							disabled="true">
 						</p:inputText>
-						<p:outputLabel for="popup" value="Fecha" />
-						<p:calendar id="popup"
-							value="#{gestionarTransaccionesView.date_consignacion}"
-							binding="#{gestionarTransaccionesView.calendar_consignacion}"
-							disabled="true" />
 						<h:outputText value="Descripción" />
 						<p:inputTextarea rows="5" cols="30" counter="display"
 							maxlength="200" counterTemplate="{0} caracteres restantes"
@@ -90,7 +86,7 @@
 							filterMatchMode="contains">
 							<h:outputText value="#{consignaciones.conValor}" />
 						</p:column>
-						<p:column headerText="Fecha" >
+						<p:column headerText="Fecha">
 							<h:outputText value="#{consignaciones.conFecha}" />
 						</p:column>
 						<p:column headerText="Descripción"
@@ -128,11 +124,6 @@
 							binding="#{gestionarTransaccionesView.txtValorRetiro}"
 							disabled="true">
 						</p:inputText>
-						<p:outputLabel for="popup" value="Fecha" />
-						<p:calendar id="popupret"
-							value="#{gestionarTransaccionesView.date_Retiro}"
-							binding="#{gestionarTransaccionesView.calendar_Retiro}"
-							disabled="true" />
 						<h:outputText value="Descripción" />
 						<p:inputTextarea rows="5" cols="30" counter="display2"
 							maxlength="200" counterTemplate="{0} caracteres restantes"
@@ -173,7 +164,7 @@
 							filterMatchMode="contains">
 							<h:outputText value="#{retiros.retValor}" />
 						</p:column>
-						<p:column headerText="Fecha" >
+						<p:column headerText="Fecha">
 							<h:outputText value="#{retiros.retFecha}" />
 						</p:column>
 						<p:column headerText="Descripción"
@@ -204,18 +195,11 @@
 								listener="#{gestionarTransaccionesView.txtNumeroCuentaListener_transferencia()}"
 								update="formTransacciones"></p:ajax>
 						</p:inputText>
-						<h:outputText value="Cédula Usuario Origen" />
+						<h:outputText value="Cédula Usuario" />
 						<p:inputText id="numeroCedulaTran"
 							value="#{gestionarTransaccionesView.cedulaUsuario_Transferencia}"
 							converterMessage="Por favor ingresa solo dígitos en la cedula del usuario"
 							binding="#{gestionarTransaccionesView.txtCedulaUsuario_Transferencia}"
-							disabled="true">
-						</p:inputText>
-						<h:outputText value="Cédula Usuario Destino" />
-						<p:inputText id="numeroCedulaDest"
-							value="#{gestionarTransaccionesView.cedulaUsuarioDest_Transferencia}"
-							converterMessage="Por favor ingresa solo dígitos en la cedula del usuario"
-							binding="#{gestionarTransaccionesView.txtCedulaUsuarioDest_Transferencia}"
 							disabled="true">
 						</p:inputText>
 						<h:outputText value="Valor Transferencia" />
@@ -224,11 +208,6 @@
 							binding="#{gestionarTransaccionesView.txtValorTransferencia}"
 							disabled="true">
 						</p:inputText>
-						<p:outputLabel for="popup" value="Fecha" />
-						<p:calendar id="popuptran"
-							value="#{gestionarTransaccionesView.date_Transferencia}"
-							binding="#{gestionarTransaccionesView.calendar_Transferencia}"
-							disabled="true" />
 						<h:outputText value="Descripción" />
 						<p:inputTextarea rows="5" cols="30" counter="display3"
 							maxlength="200" counterTemplate="{0} caracteres restantes"

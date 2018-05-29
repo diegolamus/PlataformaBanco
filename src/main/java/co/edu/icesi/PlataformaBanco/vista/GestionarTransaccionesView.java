@@ -32,6 +32,9 @@ public class GestionarTransaccionesView {
 	@ManagedProperty(value = "#{businessDelegate}")
 	private IBusinessDelegate businessDelegate;
 
+	// Indice para manejar la tabla
+	private int tanIndex;
+
 	// Atributos consignacion
 	private InputText txtCodigoConsignacion;
 	private long codigoConsignacion;
@@ -40,8 +43,6 @@ public class GestionarTransaccionesView {
 	private long cedulaUsuario_consignacion;
 	private BigDecimal valorConsignacion;
 	private InputText txtValorConsigancion;
-	private Date Date_consignacion;
-	private Calendar calendar_consignacion;
 	private InputTextarea descripcion_consignacion;
 	private CommandButton btnGuardar_consignacion;
 	private CommandButton btnLimpiar_consignacion;
@@ -55,8 +56,6 @@ public class GestionarTransaccionesView {
 	private long cedulaUsuario_Retiro;
 	private BigDecimal valorRetiro;
 	private InputText txtValorRetiro;
-	private Date Date_Retiro;
-	private Calendar calendar_Retiro;
 	private InputTextarea descripcion_Retiro;
 	private CommandButton btnGuardar_Retiro;
 	private CommandButton btnLimpiar_Retiro;
@@ -69,12 +68,8 @@ public class GestionarTransaccionesView {
 	private InputText txtNumeroCuenta_destino_Transferencia;
 	private InputText txtCedulaUsuario_Transferencia;
 	private long cedulaUsuario_Transferencia;
-	private InputText txtCedulaUsuarioDest_Transferencia;
-	private long cedulaUsuarioDest_Transferencia;
 	private BigDecimal valorTransferencia;
 	private InputText txtValorTransferencia;
-	private Date Date_Transferencia;
-	private Calendar calendar_Transferencia;
 	private InputTextarea descripcion_Transferencia;
 	private CommandButton btnGuardar_Transferencia;
 	private CommandButton btnLimpiar_Transferencia;
@@ -88,11 +83,10 @@ public class GestionarTransaccionesView {
 				throw new Exception("La cuenta no existe, ingrese un numero de cuenta válido");
 			// Se acomodan los campos para crear consignacion
 			btnGuardar_consignacion.setDisabled(false);
-			txtCedulaUsuario_consignacion.setValue(cuenta.getClientes().getCliId());
+			txtCedulaUsuario_consignacion.setValue("10");//TODO
 			txtValorConsigancion.setDisabled(false);
-			calendar_consignacion.setDisabled(false);
 			descripcion_consignacion.setDisabled(false);
-
+			tanIndex = 0;
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("",
 					new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
@@ -107,10 +101,10 @@ public class GestionarTransaccionesView {
 				throw new Exception("La cuenta no existe, ingrese un numero de cuenta válido");
 			// Se acomodan los campos para crear consignacion
 			btnGuardar_Retiro.setDisabled(false);
-			txtCedulaUsuario_Retiro.setValue(cuenta.getClientes().getCliId());
+			txtCedulaUsuario_Retiro.setValue("10");//TODO
 			txtValorRetiro.setDisabled(false);
-			calendar_Retiro.setDisabled(false);
 			descripcion_Retiro.setDisabled(false);
+			tanIndex = 1;
 
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("",
@@ -135,12 +129,10 @@ public class GestionarTransaccionesView {
 				throw new Exception("La cuenta de origen no existe, ingrese un numero de cuenta de origen válido");
 			// Se acomodan los campos para crear consignacion
 			btnGuardar_Transferencia.setDisabled(false);
-			txtCedulaUsuario_Transferencia.setValue(cuentaOr.getClientes().getCliId());
-			txtCedulaUsuarioDest_Transferencia.setValue(cuentaDes.getClientes().getCliId());
+			txtCedulaUsuario_Transferencia.setValue("10");//TODO
 			txtValorTransferencia.setDisabled(false);
-			calendar_Transferencia.setDisabled(false);
 			descripcion_Transferencia.setDisabled(false);
-
+			tanIndex = 2;
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("",
 					new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
@@ -157,7 +149,7 @@ public class GestionarTransaccionesView {
 		consignacion.setId(consignacionId);
 		try {
 			// Se busca la cuenta de la la consignacion
-			Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta_consignacion.getValue().toString());
+			Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta_consignacion.getValue().toString().trim());
 			consignacion.setCuentas(cuenta);
 			// Se busca el usuario que realizara la consignacion
 			Usuarios usuario = businessDelegate.findUsuarioById(cedulaUsuario_consignacion);
@@ -165,9 +157,11 @@ public class GestionarTransaccionesView {
 			// Se asigna el valor de la consignacion
 			consignacion.setConValor(valorConsignacion);
 			// Se asigna la fecha de la consignacion
-			consignacion.setConFecha(Date_consignacion);
+			consignacion.setConFecha(new Date());
 			// Se agrega la descripción a la consignacion
-			consignacion.setConDescripcion(descripcion_consignacion.getValue().toString());
+			String observacion =descripcion_consignacion.getValue().toString();
+			consignacion.setConDescripcion(observacion);
+			descripcion_consignacion.setValue(observacion);
 			businessDelegate.crearConsigancion(consignacion);
 			consignaciones = null;
 			action_limpiarConsignacion();
@@ -187,11 +181,9 @@ public class GestionarTransaccionesView {
 		txtNumeroCuenta_consignacion.resetValue();
 		cedulaUsuario_consignacion = 0;
 		valorConsignacion = null;
-		calendar_consignacion.setValue(null);
 		descripcion_consignacion.resetValue();
 		btnGuardar_consignacion.setDisabled(true);
 		txtValorConsigancion.setDisabled(true);
-		calendar_consignacion.setDisabled(true);
 		descripcion_consignacion.setDisabled(true);
 		return "";
 	}
@@ -214,9 +206,11 @@ public class GestionarTransaccionesView {
 			// Se asigna el valor de la consignacion
 			retiro.setRetValor(valorRetiro);
 			// Se asigna la fecha de la consignacion
-			retiro.setRetFecha(Date_Retiro);
+			retiro.setRetFecha(new Date());
 			// Se agrega la descripción a la consignacion
-			retiro.setRetDescripcion(descripcion_Retiro.getValue().toString());
+			String observacion =descripcion_Retiro.getValue().toString();
+			descripcion_Retiro.setValue(observacion);
+			retiro.setRetDescripcion(observacion);
 			businessDelegate.crearRetiro(retiro);
 			retiros = null;
 			action_limpiarRetiro();
@@ -234,11 +228,9 @@ public class GestionarTransaccionesView {
 		txtNumeroCuenta_Retiro.resetValue();
 		cedulaUsuario_Retiro = 0;
 		valorRetiro = null;
-		calendar_Retiro.setValue(null);
 		descripcion_Retiro.resetValue();
 		btnGuardar_Retiro.setDisabled(true);
 		txtValorRetiro.setDisabled(true);
-		calendar_Retiro.setDisabled(true);
 		descripcion_Retiro.setDisabled(true);
 		return "";
 	}
@@ -255,7 +247,7 @@ public class GestionarTransaccionesView {
 		try {
 			// Se busca la cuenta de origen de la transfrenecia
 			Cuentas cuentaOrigen = businessDelegate
-					.findCuentaByID(txtNumeroCuenta_origen_Transferencia.getValue().toString());
+					.findCuentaByID(txtNumeroCuenta_origen_Transferencia.getValue().toString().trim());
 			transferencia.setCuentasByOrigenCueNumero(cuentaOrigen);
 			// Se busca la cuenta de destino de la transfrenecia
 			Cuentas cuentaDestino = businessDelegate
@@ -269,9 +261,11 @@ public class GestionarTransaccionesView {
 			// Se asigna el valor de la consignacion
 			transferencia.setTranValor(valorTransferencia);
 			// Se asigna la fecha de la consignacion
-			transferencia.setTranFecha(Date_Transferencia);
+			transferencia.setTranFecha(new Date());
 			// Se agrega la descripción a la consignacion
-			transferencia.setTranDescripcion(descripcion_Transferencia.getValue().toString());
+			String observacion =descripcion_Transferencia.getValue().toString();
+			transferencia.setTranDescripcion(observacion);
+			descripcion_Transferencia.setValue(observacion);
 			businessDelegate.crearTransferencia(transferencia);
 			action_limpiarTransferencia();
 			transferencias = null;
@@ -288,14 +282,11 @@ public class GestionarTransaccionesView {
 		codigoTransferencia = 0;
 		txtNumeroCuenta_origen_Transferencia.resetValue();
 		txtNumeroCuenta_destino_Transferencia.resetValue();
-		cedulaUsuarioDest_Transferencia =0;
 		cedulaUsuario_Transferencia = 0;
 		valorTransferencia = null;
-		calendar_Transferencia.setValue(null);
 		descripcion_Transferencia.resetValue();
 		btnGuardar_Transferencia.setDisabled(true);
 		txtValorTransferencia.setDisabled(true);
-		calendar_Transferencia.setDisabled(true);
 		descripcion_Transferencia.setDisabled(true);
 		return "";
 	}
@@ -343,54 +334,6 @@ public class GestionarTransaccionesView {
 
 	public void setTransferencias(List<Transferencias> transferencias) {
 		this.transferencias = transferencias;
-	}
-
-	public Date getDate_consignacion() {
-		return Date_consignacion;
-	}
-
-	public void setDate_consignacion(Date date_consignacion) {
-		Date_consignacion = date_consignacion;
-	}
-
-	public Calendar getCalendar_consignacion() {
-		return calendar_consignacion;
-	}
-
-	public void setCalendar_consignacion(Calendar calendar_consignacion) {
-		this.calendar_consignacion = calendar_consignacion;
-	}
-
-	public Date getDate_Retiro() {
-		return Date_Retiro;
-	}
-
-	public void setDate_Retiro(Date date_Retiro) {
-		Date_Retiro = date_Retiro;
-	}
-
-	public Calendar getCalendar_Retiro() {
-		return calendar_Retiro;
-	}
-
-	public void setCalendar_Retiro(Calendar calendar_Retiro) {
-		this.calendar_Retiro = calendar_Retiro;
-	}
-
-	public Date getDate_Transferencia() {
-		return Date_Transferencia;
-	}
-
-	public void setDate_Transferencia(Date date_Transferencia) {
-		Date_Transferencia = date_Transferencia;
-	}
-
-	public Calendar getCalendar_Transferencia() {
-		return calendar_Transferencia;
-	}
-
-	public void setCalendar_Transferencia(Calendar calendar_Transferencia) {
-		this.calendar_Transferencia = calendar_Transferencia;
 	}
 
 	public InputText getTxtCodigoTransferencia() {
@@ -648,21 +591,13 @@ public class GestionarTransaccionesView {
 	public void setValorConsignacion(BigDecimal valorConsignacion) {
 		this.valorConsignacion = valorConsignacion;
 	}
-
-	public InputText getTxtCedulaUsuarioDest_Transferencia() {
-		return txtCedulaUsuarioDest_Transferencia;
+	
+	public int getTanIndex() {
+		return tanIndex;
 	}
 
-	public void setTxtCedulaUsuarioDest_Transferencia(InputText txtCedulaUsuarioDest_Transferencia) {
-		this.txtCedulaUsuarioDest_Transferencia = txtCedulaUsuarioDest_Transferencia;
-	}
-
-	public long getCedulaUsuarioDest_Transferencia() {
-		return cedulaUsuarioDest_Transferencia;
-	}
-
-	public void setCedulaUsuarioDest_Transferencia(long cedulaUsuarioDest_Transferencia) {
-		this.cedulaUsuarioDest_Transferencia = cedulaUsuarioDest_Transferencia;
+	public void setTanIndex(int tanIndex) {
+		this.tanIndex = tanIndex;
 	}
 	
 

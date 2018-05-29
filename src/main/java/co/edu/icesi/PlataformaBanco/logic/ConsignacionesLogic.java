@@ -35,7 +35,7 @@ public class ConsignacionesLogic implements IConsignacionesLogic {
 			throw new Exception("Se debe ingresar una consignación");
 		//Validamos que el id de la consignación no sea nulo
 		if(entity.getId()==null)
-			throw new Exception("Debe ingresar una id valida");
+			throw new Exception("Debe ingresar una numero de consignación valida");
 		//Validamos que el id de la consugnación sea valido
 		if(entity.getId().getConCodigo() == 0 || entity.getId().getCueNumero().trim().equals(""))
 			throw new Exception("El id de la consignación no es valido");

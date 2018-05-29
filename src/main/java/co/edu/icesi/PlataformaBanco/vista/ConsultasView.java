@@ -1,5 +1,6 @@
 package co.edu.icesi.PlataformaBanco.vista;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +36,7 @@ public class ConsultasView {
 	private List<Retiros> retiros;
 
 	public String action_buscar() {
-		// Se ponen listas en null para que se ejecuten los get y se hagan los filtros
-		// correspondientes
+		// Se ponen listas en null para que se ejecuten los get y se hagan los filtros correspondientes
 		cuentas = null;
 		transferencias = null;
 		consignaciones = null;
@@ -49,7 +49,11 @@ public class ConsultasView {
 		cedulaCliente = 0;
 		calendar_fechaInicio.setValue(null);
 		calendar_fechaFinal.setValue(null);
-		txtNumeroCuenta.setValue("");
+		txtNumeroCuenta.setValue(null);
+		cuentas = null;
+		transferencias = null;
+		consignaciones = null;
+		retiros = null;
 		return "";
 	}
 
@@ -110,15 +114,18 @@ public class ConsultasView {
 	}
 
 	public List<Cuentas> getCuentas() {
-		//TODO revisar
 		if(cuentas ==null) {
 			try {
+				List<Cuentas> eliminar = new ArrayList<>();
 				cuentas = businessDelegate.findAllCuentas();
 				if(cedulaCliente!=0) {
 					for (Cuentas cuentas2 : cuentas) {
 						if(!(cuentas2.getClientes().getCliId()==cedulaCliente))
-							cuentas.remove(cuentas2);
+							eliminar.add(cuentas2);
 					}
+				}
+				for (Cuentas cuenta : eliminar) {
+					cuentas.remove(cuenta);
 				}
 			}catch (Exception e) {
 				e.printStackTrace();
@@ -132,34 +139,37 @@ public class ConsultasView {
 	}
 
 	public List<Transferencias> getTransferencias() {
-		// TODO revisar
 		if (transferencias == null) {
 			try {
+				List<Transferencias> eliminar = new ArrayList<>();
 				transferencias = businessDelegate.findAllTransferencia();
 				if (cedulaCliente != 0) {
 					for (Transferencias transferencias2 : transferencias) {
-						if (!(transferencias2.getCuentasByOrigenCueNumero().getClientes().getCliId() == cedulaCliente))
-							transferencias.remove(transferencias2);
+						if (!(transferencias2.getCuentasByOrigenCueNumero().getClientes().getCliId() == cedulaCliente) && !eliminar.contains(transferencias2))
+							eliminar.add(transferencias2);
 					}
 				}
 				if (date_fechaInicio != null) {
 					for (Transferencias transferencias2 : transferencias) {
-						if (transferencias2.getTranFecha().compareTo(date_fechaInicio) < 0)
-							transferencias.remove(transferencias2);
+						if (transferencias2.getTranFecha().compareTo(date_fechaInicio) < 0 && !eliminar.contains(transferencias2))
+							eliminar.add(transferencias2);
 					}
 				}
 				if (date_fechaFinal != null) {
 					for (Transferencias transferencias2 : transferencias) {
-						if (transferencias2.getTranFecha().compareTo(date_fechaFinal) > 0)
-							transferencias.remove(transferencias2);
+						if (transferencias2.getTranFecha().compareTo(date_fechaFinal) > 0 && !eliminar.contains(transferencias2))
+							eliminar.add(transferencias2);
 					}
 				}
-				if (!txtNumeroCuenta.getValue().toString().trim().equals("")) {
+				if (txtNumeroCuenta.getValue()!= null && !txtNumeroCuenta.getValue().toString().trim().equals("")) {
 					for (Transferencias transferencias2 : transferencias) {
 						if (!transferencias2.getCuentasByOrigenCueNumero().getCueNumero()
-								.equals(txtNumeroCuenta.getValue().toString()))
-							transferencias.remove(transferencias2);
+								.equals(txtNumeroCuenta.getValue().toString()) && !eliminar.contains(transferencias2))
+							eliminar.add(transferencias2);
 					}
+				}
+				for (Transferencias transferencia : eliminar) {
+					transferencias.remove(transferencia);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -173,34 +183,37 @@ public class ConsultasView {
 	}
 
 	public List<Consignaciones> getConsignaciones() {
-		// TODO revisar
 		if (consignaciones == null) {
 			try {
+				List<Consignaciones> eliminar = new ArrayList<>();
 				consignaciones = businessDelegate.findAllConsiganciones();
 				if (cedulaCliente != 0) {
 					for (Consignaciones consignaciones2 : consignaciones) {
-						if (!(consignaciones2.getCuentas().getClientes().getCliId() == cedulaCliente))
-							consignaciones.remove(consignaciones2);
+						if (!(consignaciones2.getCuentas().getClientes().getCliId() == cedulaCliente)&& !eliminar.contains(consignaciones2))
+							eliminar.add(consignaciones2);
 					}
 				}
 				if (date_fechaInicio != null) {
 					for (Consignaciones consignaciones2 : consignaciones) {
-						if (consignaciones2.getConFecha().compareTo(date_fechaInicio) < 0)
-							consignaciones.remove(consignaciones2);
+						if (consignaciones2.getConFecha().compareTo(date_fechaInicio) < 0 && !eliminar.contains(consignaciones2))
+							eliminar.add(consignaciones2);
 					}
 				}
 				if (date_fechaFinal != null) {
 					for (Consignaciones consignaciones2 : consignaciones) {
-						if (consignaciones2.getConFecha().compareTo(date_fechaFinal) > 0)
-							consignaciones.remove(consignaciones2);
+						if (consignaciones2.getConFecha().compareTo(date_fechaFinal) > 0 && !eliminar.contains(consignaciones2))
+							eliminar.add(consignaciones2);
 					}
 				}
-				if (!txtNumeroCuenta.getValue().toString().trim().equals("")) {
+				if (txtNumeroCuenta.getValue()!= null && !txtNumeroCuenta.getValue().toString().trim().equals("")) {
 					for (Consignaciones consignaciones2 : consignaciones) {
 						if (!consignaciones2.getCuentas().getCueNumero()
-								.equals(txtNumeroCuenta.getValue().toString()))
-							consignaciones.remove(consignaciones2);
+								.equals(txtNumeroCuenta.getValue().toString()) &&!eliminar.contains(consignaciones2))
+							eliminar.add(consignaciones2);
 					}
+				}
+				for (Consignaciones consignacion : eliminar) {
+					consignaciones.remove(consignacion);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -214,34 +227,37 @@ public class ConsultasView {
 	}
 
 	public List<Retiros> getRetiros() {
-		// TODO revisar
 		if (retiros == null) {
 			try {
+				List<Retiros> eliminar = new ArrayList<>();
 				retiros = businessDelegate.findAllRetiros();
 				if (cedulaCliente != 0) {
 					for (Retiros retiros2 : retiros) {
-						if (!(retiros2.getCuentas().getClientes().getCliId() == cedulaCliente))
-							retiros.remove(retiros2);
+						if (!(retiros2.getCuentas().getClientes().getCliId() == cedulaCliente)&& !eliminar.contains(retiros2))
+							eliminar.add(retiros2);
 					}
 				}
 				if (date_fechaInicio != null) {
 					for (Retiros retiros2 : retiros) {
-						if (retiros2.getRetFecha().compareTo(date_fechaInicio) < 0)
-							retiros.remove(retiros2);
+						if (retiros2.getRetFecha().compareTo(date_fechaInicio) < 0&& !eliminar.contains(retiros2))
+							eliminar.add(retiros2);
 					}
 				}
 				if (date_fechaFinal != null) {
 					for (Retiros retiros2 : retiros) {
-						if (retiros2.getRetFecha().compareTo(date_fechaFinal) > 0)
-							retiros.remove(retiros2);
+						if (retiros2.getRetFecha().compareTo(date_fechaFinal) > 0&& !eliminar.contains(retiros2))
+							eliminar.add(retiros2);
 					}
 				}
-				if (!txtNumeroCuenta.getValue().toString().trim().equals("")) {
+				if (txtNumeroCuenta.getValue()!= null && !txtNumeroCuenta.getValue().toString().trim().equals("")) {
 					for (Retiros retiros2 : retiros) {
 						if (!retiros2.getCuentas().getCueNumero()
-								.equals(txtNumeroCuenta.getValue().toString()))
-							retiros.remove(retiros2);
+								.equals(txtNumeroCuenta.getValue().toString())&& !eliminar.contains(retiros2))
+							eliminar.add(retiros2);
 					}
+				}
+				for (Retiros retiro : eliminar) {
+					retiros.remove(retiro); 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

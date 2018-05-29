@@ -18,12 +18,12 @@
 				value="#{consultasView.cedulaUsuario}"
 				converterMessage="Por favor ingresa solo dígitos en el id">
 			</p:inputText>
-			<p:outputLabel for="fechaInicio" value="FechaInicio" />
+			<p:outputLabel for="fechaInicio" value="Fecha Inicio" />
 			<p:calendar id="fechaInicio"
 				value="#{consultasView.date_fechaInicio}"
 				binding="#{consultasView.calendar_fechaInicio}" />
-			<p:outputLabel for="fechaInicio" value="FechaInicio" />
-			<p:calendar id="fechaInicio" value="#{consultasView.date_fechaFinal}"
+			<p:outputLabel for="fechaFin" value="Fecha Fin" />
+			<p:calendar id="fechaFin" value="#{consultasView.date_fechaFinal}"
 				binding="#{consultasView.calendar_fechaFinal}" />
 			<h:outputText value="Cuenta cliente" />
 			<p:inputText id="numeroCuenta"
@@ -74,7 +74,7 @@
 			</p:tab>
 			<p:tab title="Consignaciones">
 				<p:dataTable widgetVar="tblConsignaciones" var="consignaciones"
-					rows="12" paginator="true"
+					rows="12" paginator="true" 
 					paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
 					scrollable="TRUE" scrollHeight="250"
 					value="#{consultasView.consignaciones}">
@@ -155,7 +155,7 @@
 						filterMatchMode="contains">
 						<h:outputText value="#{transferencias.id.origenCueNumero}" />
 					</p:column>
-					<p:column headerText="Número cuenta detino"
+					<p:column headerText="Número cuenta destino"
 						filterBy="#{transferencias.id.destinoCueNumero}"
 						filterMatchMode="contains">
 						<h:outputText value="#{transferencias.id.destinoCueNumero}" />
