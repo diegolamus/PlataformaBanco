@@ -76,7 +76,7 @@ public class RetirosDAO implements IRetirosDAO{
 	@Override
 	public List<Retiros> consultarRetirosPorClientePorRangoFechasPorCuenta(long cedulaCliente, Date Inicio, Date fin, Cuentas cuenta){
 		String jpql = "SELECT Ret from Retiros Ret WHERE Ret.cuentas.clientes.cliId=:cedulaCliente"
-				+ " AND Con.cuentas=:cuenta"+" AND Ret.retFecha BETWEEN :start AND :end ";
+				+ " AND Ret.cuentas=:cuenta"+" AND Ret.retFecha BETWEEN :start AND :end ";
 		Query query = em.createQuery(jpql);
 		query.setParameter("cedulaCliente", cedulaCliente);
 		query.setParameter("start", Inicio);
