@@ -42,7 +42,7 @@ public class ConsultasView {
 	private List<Transferencias> transferencias;
 	private List<Consignaciones> consignaciones;
 	private List<Retiros> retiros;
-	
+
 	public void listener_buscarCliente() {
 		try {
 			@SuppressWarnings("unused")
@@ -58,14 +58,49 @@ public class ConsultasView {
 					new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
 		}
 
-	} 
+	}
+
 	public String action_buscar() {
-		// Se ponen listas en null para que se ejecuten los get y se hagan los filtros
-		// correspondientes
-		cuentas = null;
-		transferencias = null;
-		consignaciones = null;
-		retiros = null;
+		// Se realizan las consultas necesarias
+		try {
+			// Se verifica si se ingreso cuenta
+			boolean ingresoCuenta = (txtNumeroCuenta.getValue() != null
+					&& !txtNumeroCuenta.getValue().toString().trim().equals(""));
+			// Se verifica si ingreso fecha inicio
+			boolean ingresoFechaInicio = (date_fechaInicio != null);
+			// Se verifica si ingreso fecha de fin
+			boolean ingresoFechaFin = (date_fechaFinal != null);
+			// Se inicializan fechas que abarquen todas las transacciones
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			Date inicio = sdf.parse("21/12/1900");
+			Date fin = new Date();
+			// Se asigna fecha de inicio si se ingreso
+			if (ingresoFechaInicio) {
+				inicio = date_fechaInicio;
+			}
+			// Se asigna fecha de fin si se ingreso
+			if (ingresoFechaFin) {
+				fin = date_fechaFinal;
+			}
+			// Se verifican todos los casos para consultar
+			if (!ingresoFechaInicio && !ingresoFechaFin && !ingresoCuenta) {
+				retiros = businessDelegate.consultarRetirosPorCliente(cedulaCliente);
+				transferencias = businessDelegate.consultarTransferenciasPorCliente(cedulaCliente);
+				consignaciones = businessDelegate.consultarConsignacionesPorCliente(cedulaCliente);
+			} else if (!ingresoCuenta && (ingresoFechaFin || ingresoFechaInicio)) {
+				retiros = businessDelegate.consultarRetirosPorClientePorRangoFechas(cedulaCliente, inicio, fin);
+				transferencias = businessDelegate.consultarTransferenciasPorClientePorRangoFechas(cedulaCliente, inicio,fin);
+				consignaciones = businessDelegate.consultarConsignacionesPorClientePorRangoFechas(cedulaCliente,inicio, fin);
+			} else if (ingresoCuenta) {
+				Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta.getValue().toString().trim());
+				retiros = businessDelegate.consultarRetirosPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin,cuenta);
+				transferencias = businessDelegate.consultarTransferenciasPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
+				consignaciones = businessDelegate.consultarConsignacionesPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage("",
+					new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
+		}
 		return "";
 	}
 
@@ -154,30 +189,6 @@ public class ConsultasView {
 	}
 
 	public List<Transferencias> getTransferencias() {
-		if (transferencias == null) {
-			try {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date inicio = sdf.parse("21/12/1900");
-				Date fin = new Date();
-				if (date_fechaInicio != null) {
-					inicio = date_fechaInicio;
-				}
-				if (date_fechaFinal != null) {
-					fin = date_fechaFinal;
-				}
-				if(date_fechaInicio ==null&& date_fechaFinal==null)
-					transferencias = businessDelegate.consultarTransferenciasPorCliente(cedulaCliente);
-				else if(txtNumeroCuenta.getValue() == null || txtNumeroCuenta.getValue().toString().trim().equals(""))
-					transferencias = businessDelegate.consultarTransferenciasPorClientePorRangoFechas(cedulaCliente, inicio, fin);
-				else if(!txtNumeroCuenta.getValue().toString().trim().equals("")){
-					Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta.getValue().toString().trim());
-					transferencias = businessDelegate.consultarTransferenciasPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
-				}
-			} catch (Exception e) {
-				FacesContext.getCurrentInstance().addMessage("",
-						new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
-			}
-		}
 		return transferencias;
 	}
 
@@ -186,30 +197,6 @@ public class ConsultasView {
 	}
 
 	public List<Consignaciones> getConsignaciones() {
-		if (consignaciones == null) {
-			try {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date inicio = sdf.parse("21/12/1900");
-				Date fin = new Date();
-				if (date_fechaInicio != null) {
-					inicio = date_fechaInicio;
-				}
-				if (date_fechaFinal != null) {
-					fin = date_fechaFinal;
-				}
-				if(date_fechaInicio ==null&& date_fechaFinal==null)
-					consignaciones = businessDelegate.consultarConsignacionesPorCliente(cedulaCliente);
-				else if(txtNumeroCuenta.getValue() == null || txtNumeroCuenta.getValue().toString().trim().equals(""))
-					consignaciones = businessDelegate.consultarConsignacionesPorClientePorRangoFechas(cedulaCliente, inicio, fin);
-				else if(!txtNumeroCuenta.getValue().toString().trim().equals("")){
-					Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta.getValue().toString().trim());
-					consignaciones = businessDelegate.consultarConsignacionesPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
-				}
-			} catch (Exception e) {
-				FacesContext.getCurrentInstance().addMessage("",
-						new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
-			}
-		}
 		return consignaciones;
 	}
 
@@ -218,56 +205,35 @@ public class ConsultasView {
 	}
 
 	public List<Retiros> getRetiros() {
-		if (retiros == null) {
-			try {			
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				Date inicio = sdf.parse("21/12/1900");
-				Date fin = new Date();
-				if (date_fechaInicio != null) {
-					inicio = date_fechaInicio;
-				}
-				if (date_fechaFinal != null) {
-					fin = date_fechaFinal;
-				}
-				if(date_fechaInicio ==null&& date_fechaFinal==null)
-					retiros = businessDelegate.consultarRetirosPorCliente(cedulaCliente);
-				else if(txtNumeroCuenta.getValue() == null || txtNumeroCuenta.getValue().toString().trim().equals(""))
-					retiros = businessDelegate.consultarRetirosPorClientePorRangoFechas(cedulaCliente, inicio, fin);
-				else if(!txtNumeroCuenta.getValue().toString().trim().equals("")){
-					Cuentas cuenta = businessDelegate.findCuentaByID(txtNumeroCuenta.getValue().toString().trim());
-					retiros = businessDelegate.consultarRetirosPorClientePorRangoFechasPorCuenta(cedulaCliente, inicio, fin, cuenta);
-				}
-			} catch (Exception e) {
-				FacesContext.getCurrentInstance().addMessage("",
-						new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
-			}
-		}
 		return retiros;
 	}
 
 	public void setRetiros(List<Retiros> retiros) {
 		this.retiros = retiros;
 	}
+
 	public long getCedulaCliente() {
 		return cedulaCliente;
 	}
+
 	public void setCedulaCliente(long cedulaCliente) {
 		this.cedulaCliente = cedulaCliente;
 	}
+
 	public CommandButton getBtnBuscar() {
 		return btnBuscar;
 	}
+
 	public void setBtnBuscar(CommandButton btnBuscar) {
 		this.btnBuscar = btnBuscar;
 	}
+
 	public InputText getTxtCedulaCliente() {
 		return txtCedulaCliente;
 	}
+
 	public void setTxtCedulaCliente(InputText txtCedulaCliente) {
 		this.txtCedulaCliente = txtCedulaCliente;
 	}
-	
-	
-	
 
 }

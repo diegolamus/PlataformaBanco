@@ -5,6 +5,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
 import org.primefaces.component.password.Password;
 
 import co.edu.icesi.PlataformaBanco.businessDelegate.IBusinessDelegate;
@@ -24,7 +26,9 @@ public class LoginView {
 		try {
 			Usuarios usuario = businessDelegate.findUsuarioById(txtUsuario);
 			if(!usuario.getUsuClave().equals(txtContrasenia.getValue().toString()))
-				throw new Exception("La contraseña es incorrecta");
+				throw new Exception("La contrasenia es incorrecta");
+			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext();
+			session.setAttribute("usuario", usuario.getUsuCedula());
 			return "irGestionarCliente";
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("",

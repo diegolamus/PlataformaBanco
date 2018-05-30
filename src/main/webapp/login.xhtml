@@ -9,27 +9,21 @@
 <h:body>
 	<h:form id="formLogIn">
 		<p:growl id="growl4"></p:growl>
-
 		<div align="center">
+			<p:graphicImage name="images/sidebarusuariocorporativo.png" />
 			<p:panel id="basic" header="Inicio de sesión"
-				style="margin-bottom:20px" >
-
+				style="margin-bottom:20px">
 				<h:panelGrid columns="2" cellpadding="10">
-
 					<h:outputText value="Cedula Usuario" />
 					<p:inputText id="usuario" value="#{loginView.txtUsuario}">
 					</p:inputText>
-
 					<h:outputText value="Contraseña" />
 					<p:password id="Contrasenia" binding="#{loginView.txtContrasenia}">
 					</p:password>
-
 				</h:panelGrid>
-
 				<p:commandButton value="Ingresar" id="btnIngresar"
 					action="#{loginView.action_ingresar()}"
 					styleClass="ui-priority-primary" update="formLogIn, growl4" />
-
 			</p:panel>
 		</div>
 	</h:form>
