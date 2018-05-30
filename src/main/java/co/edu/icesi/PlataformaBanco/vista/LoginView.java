@@ -27,8 +27,8 @@ public class LoginView {
 			Usuarios usuario = businessDelegate.findUsuarioById(txtUsuario);
 			if(!usuario.getUsuClave().equals(txtContrasenia.getValue().toString()))
 				throw new Exception("La contrasenia es incorrecta");
-			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext();
-			session.setAttribute("usuario", usuario.getUsuCedula());
+			HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+			session.setAttribute("usuario", usuario.getUsuCedula()+"");
 			return "irGestionarCliente";
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("",

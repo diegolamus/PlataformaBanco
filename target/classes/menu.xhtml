@@ -6,7 +6,20 @@
 <h:body>
 	<h:form>
 		<p:megaMenu orientation="horizontal" style="margin-top:20px">
-
+			<p:submenu label="Usuario" icon="ui-icon-check">
+				<p:column align="center">
+					<p:graphicImage url="Images/sidebarusuariocorporativo.png"
+						width="200" />
+					<br />
+					<h:outputText value=" " />
+					<br />
+					<h:outputText value="#{menuView.usuario}" />
+					<p:submenu label="opciones">
+						<p:menuitem value="Cerrar sesión"
+							action="#{menuView.action_cerrasSesion()}" icon="ui-icon-close" />
+					</p:submenu>
+				</p:column>
+			</p:submenu>
 			<p:menuitem value="Clientes"
 				url="http://localhost:8080/PlataformaBanco/gestionarCliente.xhtml" />
 			<p:menuitem value="Cuentas"
