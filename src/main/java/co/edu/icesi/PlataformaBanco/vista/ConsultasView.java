@@ -63,6 +63,8 @@ public class ConsultasView {
 	public String action_buscar() {
 		// Se realizan las consultas necesarias
 		try {
+			//Se consultan las cuentas del cliente
+			cuentas = businessDelegate.consultarCuentasPorCliente(cedulaCliente);
 			// Se verifica si se ingreso cuenta
 			boolean ingresoCuenta = (txtNumeroCuenta.getValue() != null
 					&& !txtNumeroCuenta.getValue().toString().trim().equals(""));
@@ -172,15 +174,6 @@ public class ConsultasView {
 
 	@Transactional(readOnly = true)
 	public List<Cuentas> getCuentas() {
-		if (cuentas == null) {
-			try {
-				if (cedulaCliente != 0) {
-					cuentas = businessDelegate.consultarCuentasPorCliente(cedulaCliente);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		return cuentas;
 	}
 
