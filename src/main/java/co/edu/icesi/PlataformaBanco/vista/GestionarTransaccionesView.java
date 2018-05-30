@@ -4,11 +4,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
@@ -33,6 +35,8 @@ public class GestionarTransaccionesView {
 
 	// Indice para manejar la tabla
 	private int tanIndex;
+	// Usuario que est� en session
+	private String usuario;
 
 	// Atributos consignacion
 	private InputText txtNumeroCuenta_consignacion;
@@ -68,6 +72,12 @@ public class GestionarTransaccionesView {
 	private CommandButton btnLimpiar_Transferencia;
 	private List<Transferencias> transferencias;
 
+	@PostConstruct
+	public void recuperarUsuario() {
+		HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		usuario = (String)session.getAttribute("usuario");
+	}
+	
 	public void txtNumeroCuentaListener_consignacion() {
 		try {
 			// Se busca la cuenta
@@ -76,7 +86,7 @@ public class GestionarTransaccionesView {
 				throw new Exception("La cuenta no existe, ingrese un numero de cuenta válido");
 			// Se acomodan los campos para crear consignacion
 			btnGuardar_consignacion.setDisabled(false);
-			txtCedulaUsuario_consignacion.setValue("10");//TODO
+			txtCedulaUsuario_consignacion.setValue(usuario);
 			txtValorConsigancion.setDisabled(false);
 			descripcion_consignacion.setDisabled(false);
 			tanIndex = 0;
@@ -94,11 +104,10 @@ public class GestionarTransaccionesView {
 				throw new Exception("La cuenta no existe, ingrese un numero de cuenta válido");
 			// Se acomodan los campos para crear consignacion
 			btnGuardar_Retiro.setDisabled(false);
-			txtCedulaUsuario_Retiro.setValue("10");//TODO
+			txtCedulaUsuario_Retiro.setValue(usuario);
 			txtValorRetiro.setDisabled(false);
 			descripcion_Retiro.setDisabled(false);
 			tanIndex = 1;
-
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage("",
 					new FacesMessage(FacesMessage.SEVERITY_INFO, e.getMessage(), ""));
@@ -122,7 +131,7 @@ public class GestionarTransaccionesView {
 				throw new Exception("La cuenta de origen no existe, ingrese un numero de cuenta de origen válido");
 			// Se acomodan los campos para crear consignacion
 			btnGuardar_Transferencia.setDisabled(false);
-			txtCedulaUsuario_Transferencia.setValue("10");//TODO
+			txtCedulaUsuario_Transferencia.setValue(usuario);
 			txtValorTransferencia.setDisabled(false);
 			descripcion_Transferencia.setDisabled(false);
 			tanIndex = 2;
